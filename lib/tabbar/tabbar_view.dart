@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:isfa_crm/accounts_view.dart';
+import 'package:isfa_crm/assigned_accounts_view.dart';
+import 'package:isfa_crm/pm_account_view.dart';
 
 class TabbarView extends StatelessWidget {
   const TabbarView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    const name = 'Ankita';
     return DefaultTabController(
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            title: Row(
+              children: [
+                const NameInitial(name: name),
+                SizedBox(width: 10.w),
+                const Text(name),
+              ],
+            ),
             actions: [
               IconButton(
                 onPressed: () {},
@@ -23,9 +33,9 @@ class TabbarView extends StatelessWidget {
             ],
             elevation: 0,
           ),
-          body: Column(
+          body: const Column(
             children: [
-              const Material(
+              Material(
                 color: Colors.white,
                 elevation: 2,
                 child: TabBar(
@@ -40,10 +50,10 @@ class TabbarView extends StatelessWidget {
               ),
               Expanded(
                 child: TabBarView(
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
-                    Container(color: Colors.yellow),
-                    const AccountsView(),
+                    AssignedAccountView(),
+                    AccountsView(),
                   ],
                 ),
               ),
