@@ -6,6 +6,7 @@ import 'package:isfa_crm/utility/app_storage.dart';
 
 void main() async {
   await AppStorage.objectValue();
+
   runApp(const MyApp());
 }
 
@@ -26,8 +27,9 @@ class MyApp extends StatelessWidget {
                 dividerColor: Colors.white,
                 indicator: BoxDecoration(color: Colors.white),
               ),
-              colorScheme:
-                  ColorScheme.fromSeed(seedColor: const Color(0xff437da6))));
+              colorScheme: ColorScheme.fromSeed(
+                  seedColor: const Color(0xff437da6),
+                  onSecondary: Colors.yellow)));
     });
   }
 }

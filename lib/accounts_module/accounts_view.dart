@@ -11,6 +11,7 @@ class AccountsView extends StatefulWidget {
 class _AccountsViewState extends State<AccountsView> {
   bool isAccountNameSelecting = false;
   bool showContants = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

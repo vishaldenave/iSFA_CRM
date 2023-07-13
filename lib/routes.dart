@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:isfa_crm/login_module/login_view.dart';
 import 'package:isfa_crm/tabbar/tabbar_view.dart';
 
 final router = GoRouter(
@@ -8,7 +9,7 @@ final router = GoRouter(
     GoRoute(
       path: AppPaths.initial,
       name: AppPaths.initial,
-      builder: (context, state) => const TabbarView(),
+      builder: (context, state) => const LoginView(),
     ),
     GoRoute(
       path: AppPaths.tabbar,
@@ -31,4 +32,5 @@ final router = GoRouter(
 class AppPaths {
   static const initial = '/';
   static const tabbar = '/tabbar';
+  static const pinset = '/pinset';
 }
