@@ -5,7 +5,6 @@ import 'package:isfa_crm/accounts_module/accounts_view.dart';
 import 'package:isfa_crm/assigned_accounts_module/view/assigned_accounts_view.dart';
 import 'package:isfa_crm/assigned_accounts_module/view/pm_account_view.dart';
 import 'package:isfa_crm/routes.dart';
-import 'package:isfa_crm/call_disposition_module/call_disposition_view.dart';
 import 'package:isfa_crm/utility/app_storage.dart';
 
 class TabbarView extends StatelessWidget {
@@ -26,15 +25,6 @@ class TabbarView extends StatelessWidget {
               ],
             ),
             actions: [
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const CallDisposition()));
-                },
-                icon: const Icon(Icons.notifications_outlined),
-              ),
               IconButton(
                 onPressed: () {
                   showLogoutAlert(

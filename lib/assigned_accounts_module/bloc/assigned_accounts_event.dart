@@ -16,3 +16,8 @@ class ChangeCurrentEvent extends AssignedAccountsEvent {
   final int caimpaignId;
   ChangeCurrentEvent(this.caimpaignId);
 }
+
+class SearchEvent extends AssignedAccountsEvent {
+  final String value;
+  SearchEvent(this.value);
+}

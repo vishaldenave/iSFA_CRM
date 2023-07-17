@@ -10,3 +10,5 @@ class AssignedAccountsCurrentState extends AssignedAccountsState {}
 class AssignedAccountsAllState extends AssignedAccountsState {}
 
 class AssignedAccountUpdateCurrentState extends AssignedAccountsState {}
+
+class SearchState extends AssignedAccountsState {}

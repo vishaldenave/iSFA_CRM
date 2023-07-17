@@ -84,8 +84,8 @@ class AssignedAccTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 60.w,
-      height: 25.h,
+      width: 100.w,
+      height: 30.h,
       decoration: BoxDecoration(
           color: data.isSelected ? Colors.blue : Colors.white,
           boxShadow: [

@@ -1,6 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:isfa_crm/assigned_accounts_module/models/assigned_accounts_model.dart';
-
 import '../login_module/models/login_model.dart';
 
 class AppStorage {
@@ -53,4 +52,15 @@ class AppStorage {
 
   bool get temp => _box.get("temp") ?? false;
   set temp(bool newVal) => _box.put("temp", newVal);
+
+  CampaignList? get currentCampaign {
+    final userRawJson = _box.get("currentCampaign");
+    if (userRawJson is String) {
+      return CampaignList.fromRawJson(userRawJson);
+    }
+    return null;
+  }
+
+  set currentCampaign(CampaignList? currentCampaign) =>
+      _box.put("currentCampaign", currentCampaign?.toRawJson());
 }

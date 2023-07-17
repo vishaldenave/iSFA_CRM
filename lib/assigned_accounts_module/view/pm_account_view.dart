@@ -16,6 +16,7 @@ class _PMAccountViewState extends State<PMAccountView> {
   bool isCaimpaignNameSelecting = false;
   bool showContants = false;
   AssignedAccountsModel? assignedAccountsModel;
+  String searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +86,8 @@ class _PMAccountViewState extends State<PMAccountView> {
                             ),
                           ),
                           if (isCaimpaignNameSelecting &&
-                              state is AssignedAccountsAllState)
+                              (state is AssignedAccountsAllState ||
+                                  state is SearchState))
                             Card(
                               elevation: 2,
                               child: Padding(
@@ -96,8 +98,10 @@ class _PMAccountViewState extends State<PMAccountView> {
                                       elevation: 2,
                                       borderRadius: BorderRadius.circular(5.w),
                                       color: Colors.white,
-                                      child: const TextField(
-                                        decoration: InputDecoration(
+                                      child: TextField(
+                                        onChanged: (value) =>
+                                            bloc.add(SearchEvent(value)),
+                                        decoration: const InputDecoration(
                                           hintText: 'Search...',
                                           border: InputBorder.none,
                                           prefixIcon: Icon(Icons.search),
@@ -107,18 +111,18 @@ class _PMAccountViewState extends State<PMAccountView> {
                                     SizedBox(
                                         height: 200.h,
                                         child: ListView.builder(
-                                          itemCount: bloc.allCampaign.length,
+                                          itemCount: bloc.filteredList.length,
                                           itemBuilder: (context, index) =>
                                               SizedBox(
                                             height: 50.h,
                                             child: ListTile(
                                               onTap: () {
-                                                showContants = true;
                                                 isCaimpaignNameSelecting =
                                                     false;
+
                                                 showSwitchAlert(
                                                     context,
-                                                    bloc.allCampaign[index]
+                                                    bloc.filteredList[index]
                                                         .campaignName,
                                                     bloc.current
                                                             ?.campaignName ??
@@ -126,20 +130,31 @@ class _PMAccountViewState extends State<PMAccountView> {
                                                     () => {
                                                           bloc.add(
                                                               AssignedAccountUpdateCurrentEvent(bloc
-                                                                  .allCampaign[
+                                                                  .filteredList[
                                                                       index]
-                                                                  .campaignId))
+                                                                  .campaignId)),
+                                                        },
+                                                    () => {
+                                                          bloc.add(
+                                                              AssignedAccountShowCurrentEvent())
                                                         });
                                               },
                                               contentPadding:
                                                   const EdgeInsets.all(0),
-                                              title: Text(
-                                                bloc.allCampaign[index]
-                                                    .campaignName,
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 13.sp),
-                                              ),
+                                              title: state is SearchState
+                                                  ? Text(
+                                                      bloc.filteredList[index]
+                                                          .campaignName,
+                                                      style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 13.sp),
+                                                    )
+                                                  : Text(
+                                                      bloc.filteredList[index]
+                                                          .campaignName,
+                                                      style: TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 13.sp)),
                                             ),
                                           ),
                                         ))
@@ -264,7 +279,7 @@ class _PMAccountViewState extends State<PMAccountView> {
 }
 
 void showSwitchAlert(BuildContext context, String updateCurrent,
-    String previousCurrent, Function callback) {
+    String previousCurrent, Function callbackYes, Function callbackNo) {
   showDialog(
       context: context,
       builder: (context) {
@@ -294,6 +309,7 @@ void showSwitchAlert(BuildContext context, String updateCurrent,
                       isSelected: false,
                       text: 'No',
                       onPressed: () {
+                        callbackNo();
                         Navigator.pop(context);
                       },
                     ),
@@ -301,7 +317,7 @@ void showSwitchAlert(BuildContext context, String updateCurrent,
                       isSelected: true,
                       text: 'Yes',
                       onPressed: () {
-                        callback();
+                        callbackYes();
                         Navigator.pop(context);
                       },
                     ),
@@ -362,9 +378,7 @@ class AccountCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       elevation: 5,
-      shape: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10.w),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
         child: child,

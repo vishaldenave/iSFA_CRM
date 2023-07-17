@@ -52,6 +52,11 @@ class CampaignList {
   late final String startDate;
   late final String endDate;
 
+  factory CampaignList.fromRawJson(String str) =>
+      CampaignList.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
   CampaignList.fromJson(Map<String, dynamic> json) {
     campaignId = json['campaignId'];
     campaignName = json['campaignName'];
@@ -62,13 +67,13 @@ class CampaignList {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['campaignId'] = campaignId;
-    _data['campaignName'] = campaignName;
-    _data['campaignSubType'] = campaignSubType;
-    _data['campaignType'] = campaignType;
-    _data['startDate'] = startDate;
-    _data['endDate'] = endDate;
-    return _data;
+    final data = <String, dynamic>{};
+    data['campaignId'] = campaignId;
+    data['campaignName'] = campaignName;
+    data['campaignSubType'] = campaignSubType;
+    data['campaignType'] = campaignType;
+    data['startDate'] = startDate;
+    data['endDate'] = endDate;
+    return data;
   }
 }
