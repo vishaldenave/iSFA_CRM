@@ -5,6 +5,7 @@ import 'package:isfa_crm/assigned_accounts_module/assigned_accounts_repository.d
 import 'package:isfa_crm/assigned_accounts_module/bloc/assigned_accounts_bloc.dart';
 import 'package:isfa_crm/assigned_accounts_module/models/assigned_accounts_model.dart';
 import 'package:isfa_crm/utility/app_storage.dart';
+import 'package:isfa_crm/utility/extensions.dart';
 
 class PMAccountView extends StatefulWidget {
   const PMAccountView({super.key});
@@ -13,8 +14,6 @@ class PMAccountView extends StatefulWidget {
 }
 
 class _PMAccountViewState extends State<PMAccountView> {
-  bool isCaimpaignNameSelecting = false;
-  bool showContants = false;
   AssignedAccountsModel? assignedAccountsModel;
   String searchQuery = "";
 
@@ -51,43 +50,40 @@ class _PMAccountViewState extends State<PMAccountView> {
                                       color: Colors.white, fontSize: 15.sp)))
                         ],
                       ),
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 5.h),
                       Column(
                         children: [
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              bloc.isCaimpaignNameSelecting =
+                                  !bloc.isCaimpaignNameSelecting;
+                              bloc.add(AssignedAccountShowAllEvent());
+                            },
                             child: Card(
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
+                                  borderRadius: BorderRadius.circular(5)),
                               elevation: 5,
                               child: ListTile(
-                                onTap: () {
-                                  isCaimpaignNameSelecting =
-                                      !isCaimpaignNameSelecting;
-                                  bloc.add(AssignedAccountShowAllEvent());
-                                  showContants = false;
-                                },
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text("Caimpaign Name"),
-                                    SizedBox(
-                                      height: 15.h,
-                                    ),
-                                  ],
+                                title: Text(
+                                  "Caimpaign Name",
+                                  style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w400),
                                 ),
-                                subtitle: bloc.current != null
-                                    ? Text(bloc.current?.campaignName ?? "")
-                                    : const Text("Loading...."),
-                                trailing: Icon(isCaimpaignNameSelecting
+                                subtitle: Text(
+                                    bloc.current != null
+                                        ? bloc.current?.campaignName ?? ""
+                                        : "Loading....",
+                                    style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 14.sp)),
+                                trailing: Icon(bloc.isCaimpaignNameSelecting
                                     ? Icons.keyboard_arrow_up
                                     : Icons.keyboard_arrow_down),
                               ),
                             ),
                           ),
-                          if (isCaimpaignNameSelecting &&
-                              (state is AssignedAccountsAllState ||
-                                  state is SearchState))
+                          if (bloc.isCaimpaignNameSelecting)
                             Card(
                               elevation: 2,
                               child: Padding(
@@ -96,7 +92,7 @@ class _PMAccountViewState extends State<PMAccountView> {
                                   children: [
                                     Material(
                                       elevation: 2,
-                                      borderRadius: BorderRadius.circular(5.w),
+                                      borderRadius: BorderRadius.circular(5),
                                       color: Colors.white,
                                       child: TextField(
                                         onChanged: (value) =>
@@ -109,17 +105,17 @@ class _PMAccountViewState extends State<PMAccountView> {
                                       ),
                                     ),
                                     SizedBox(
-                                        height: 200.h,
+                                        height: 250.h,
                                         child: ListView.builder(
                                           itemCount: bloc.filteredList.length,
                                           itemBuilder: (context, index) =>
-                                              SizedBox(
-                                            height: 50.h,
-                                            child: ListTile(
+                                              Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: InkWell(
                                               onTap: () {
-                                                isCaimpaignNameSelecting =
+                                                bloc.isCaimpaignNameSelecting =
                                                     false;
-
+                                                bloc.add(ChangeStateEvent());
                                                 showSwitchAlert(
                                                     context,
                                                     bloc.filteredList[index]
@@ -133,28 +129,14 @@ class _PMAccountViewState extends State<PMAccountView> {
                                                                   .filteredList[
                                                                       index]
                                                                   .campaignId)),
-                                                        },
-                                                    () => {
-                                                          bloc.add(
-                                                              AssignedAccountShowCurrentEvent())
                                                         });
                                               },
-                                              contentPadding:
-                                                  const EdgeInsets.all(0),
-                                              title: state is SearchState
-                                                  ? Text(
-                                                      bloc.filteredList[index]
-                                                          .campaignName,
-                                                      style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 13.sp),
-                                                    )
-                                                  : Text(
-                                                      bloc.filteredList[index]
-                                                          .campaignName,
-                                                      style: TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 13.sp)),
+                                              child: Text(
+                                                  bloc.filteredList[index]
+                                                      .campaignName,
+                                                  style: TextStyle(
+                                                      color: Colors.black87,
+                                                      fontSize: 14.sp)),
                                             ),
                                           ),
                                         ))
@@ -164,7 +146,7 @@ class _PMAccountViewState extends State<PMAccountView> {
                             ),
                         ],
                       ),
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 5.h),
                       AccountCardView(
                         isSelected: false,
                         child: Padding(
@@ -175,13 +157,13 @@ class _PMAccountViewState extends State<PMAccountView> {
                               Text(
                                 "Campaign Type:",
                                 style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 16.sp,
                                     fontWeight: FontWeight.w400),
                               ),
                               Text(
                                 bloc.current?.campaignType ?? "",
                                 style: TextStyle(
-                                    color: Colors.grey, fontSize: 12.sp),
+                                    color: Colors.black87, fontSize: 14.sp),
                               ),
                             ],
                           ),
@@ -198,13 +180,13 @@ class _PMAccountViewState extends State<PMAccountView> {
                               Text(
                                 "Campaign ID:",
                                 style: TextStyle(
-                                    fontSize: 14.sp,
+                                    fontSize: 16.sp,
                                     fontWeight: FontWeight.w400),
                               ),
                               Text(
                                 bloc.current?.campaignId.toString() ?? "",
                                 style: TextStyle(
-                                    color: Colors.grey, fontSize: 12.sp),
+                                    color: Colors.black87, fontSize: 14.sp),
                               ),
                             ],
                           ),
@@ -222,13 +204,15 @@ class _PMAccountViewState extends State<PMAccountView> {
                                 Text(
                                   "Start Date:",
                                   style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.w400),
                                 ),
                                 Text(
-                                  bloc.current?.startDate ?? "",
+                                  bloc.current?.startDate
+                                          .toStringFormat("dd MMMM yyyy") ??
+                                      "",
                                   style: TextStyle(
-                                      color: Colors.grey, fontSize: 12.sp),
+                                      color: Colors.black87, fontSize: 14.sp),
                                 ),
                               ],
                             ),
@@ -239,13 +223,15 @@ class _PMAccountViewState extends State<PMAccountView> {
                                 Text(
                                   "End Date:",
                                   style: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.w400),
                                 ),
                                 Text(
-                                  bloc.current?.endDate ?? "",
+                                  bloc.current?.endDate
+                                          .toStringFormat("dd MMMM yyyy") ??
+                                      "",
                                   style: TextStyle(
-                                      color: Colors.grey, fontSize: 12.sp),
+                                      color: Colors.black87, fontSize: 14.sp),
                                 ),
                               ],
                             ),
@@ -279,7 +265,7 @@ class _PMAccountViewState extends State<PMAccountView> {
 }
 
 void showSwitchAlert(BuildContext context, String updateCurrent,
-    String previousCurrent, Function callbackYes, Function callbackNo) {
+    String previousCurrent, Function callbackYes) {
   showDialog(
       context: context,
       builder: (context) {
@@ -309,7 +295,6 @@ void showSwitchAlert(BuildContext context, String updateCurrent,
                       isSelected: false,
                       text: 'No',
                       onPressed: () {
-                        callbackNo();
                         Navigator.pop(context);
                       },
                     ),
@@ -378,7 +363,7 @@ class AccountCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       elevation: 5,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
         child: child,

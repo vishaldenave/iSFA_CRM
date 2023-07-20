@@ -49,8 +49,8 @@ class CampaignList {
   late final String campaignName;
   late final String campaignSubType;
   late final String campaignType;
-  late final String startDate;
-  late final String endDate;
+  late final DateTime startDate;
+  late final DateTime endDate;
 
   factory CampaignList.fromRawJson(String str) =>
       CampaignList.fromJson(json.decode(str));
@@ -62,8 +62,13 @@ class CampaignList {
     campaignName = json['campaignName'];
     campaignSubType = json['campaignSubType'];
     campaignType = json['campaignType'];
-    startDate = json['startDate'];
-    endDate = json['endDate'];
+    startDate = json['startDate'] == null
+        ? DateTime.now()
+        : DateTime.parse(json['startDate']);
+
+    endDate = json['endDate'] == null
+        ? DateTime.now()
+        : DateTime.parse(json['endDate']);
   }
 
   Map<String, dynamic> toJson() {
@@ -72,8 +77,8 @@ class CampaignList {
     data['campaignName'] = campaignName;
     data['campaignSubType'] = campaignSubType;
     data['campaignType'] = campaignType;
-    data['startDate'] = startDate;
-    data['endDate'] = endDate;
+    data['startDate'] = startDate.toIso8601String();
+    data['endDate'] = endDate.toIso8601String();
     return data;
   }
 }

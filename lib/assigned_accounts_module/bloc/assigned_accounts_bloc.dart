@@ -13,8 +13,10 @@ class AssignedAccountsBloc
   CampaignList? current;
   List<CampaignList> allCampaign = [];
   List<CampaignList> filteredList = [];
+  bool isCaimpaignNameSelecting = false;
 
   AssignedAccountsBloc(this.repo) : super(AssignedAccountsInitial()) {
+    on<ChangeStateEvent>((event, emit) => emit(SearchState()));
     on<AssignedAccountShowCurrentEvent>((event, emit) async {
       try {
         final accountResponse =
@@ -26,7 +28,6 @@ class AssignedAccountsBloc
             current = accountResponse.campaignList.first;
             AppStorage().currentCampaign = current;
           }
-          // debugPrint(assignedCurrent!.campaignList.elementAt(0).campaignName);
           emit(AssignedAccountsCurrentState());
         }
       } catch (err) {

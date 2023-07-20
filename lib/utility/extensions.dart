@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 extension DateTimeHelper on DateTime {
   bool isSameDate(DateTime other) {
@@ -25,5 +26,11 @@ extension Helper on String {
 extension BuildContextHelper on BuildContext {
   void hideKeyboard() {
     FocusScope.of(this).requestFocus(FocusNode());
+  }
+}
+
+extension FormatDate on DateTime {
+  String toStringFormat(String format) {
+    return DateFormat(format).format(this);
   }
 }
