@@ -68,5 +68,6 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
       }
       emit(SearchState());
     });
+    on<MakeCallEvent>((event, emit) => {});
   }
 }

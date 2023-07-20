@@ -24,3 +24,8 @@ class ChangeAccountSelectEvent extends AccountsEvent {
   final bool value;
   ChangeAccountSelectEvent(this.value);
 }
+
+class MakeCallEvent extends AccountsEvent {
+  final ContactList contactList;
+  MakeCallEvent(this.contactList);
+}

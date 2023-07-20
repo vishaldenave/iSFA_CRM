@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:isfa_crm/accounts_module/accounts_repository.dart';
 import 'package:isfa_crm/accounts_module/bloc/accounts_bloc.dart';
-import 'package:isfa_crm/call_disposition_module/call_disposition_view.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class AccountsView extends StatefulWidget {
   const AccountsView({super.key});
@@ -106,22 +104,6 @@ class _AccountsViewState extends State<AccountsView> {
                                                       fontSize: 14.sp)),
                                             ),
                                           ),
-
-                                          //     SizedBox(
-                                          //   height: 30.h,
-                                          //   child: ListTile(
-
-                                          //     contentPadding:
-                                          //         const EdgeInsets.all(0),
-                                          //     title: Text(
-                                          //       bloc.filteredList[index]
-                                          //           .orgName,
-                                          //       style: TextStyle(
-                                          //           color: Colors.grey,
-                                          //           fontSize: 13.sp),
-                                          //     ),
-                                          //   ),
-                                          // ),
                                         )
                                       : const Center(
                                           child: Text("No Data found."),
@@ -169,13 +151,15 @@ class _AccountsViewState extends State<AccountsView> {
                                             BorderRadius.circular(100)),
                                     child: IconButton(
                                         onPressed: () {
-                                          launchUrl(Uri.parse(
-                                              "tel:${bloc.contactList[index].mobile}"));
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const CallDisposition()));
+                                          bloc.add(MakeCallEvent(
+                                              bloc.contactList[index]));
+                                          // launchUrl(Uri.parse(
+                                          //     "tel:${bloc.contactList[index].mobile}"));
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) =>
+                                          //             const CallDisposition()));
                                         },
                                         icon: const Icon(
                                           Icons.call,
