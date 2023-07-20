@@ -12,3 +12,5 @@ class ShowSelectedAccountState extends AccountsState {}
 class ShowContactListState extends AccountsState {}
 
 class SearchState extends AccountsState {}
+
+class ChangeState extends AccountsState {}

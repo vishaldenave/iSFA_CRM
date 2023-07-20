@@ -13,31 +13,18 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   List<OrgList> filteredList = [];
   String showSelectedName = "";
   List<ContactList> contactList = [];
+  bool isAccountNameSelecting = false;
+  bool showContants = false;
 
   AccountsBloc(this.repo) : super(AccountsInitial()) {
+    on<ChangeAccountSelectEvent>((event, emit) =>
+        {isAccountNameSelecting = event.value, emit(ChangeState())});
     on<ShowAccountsNameEvent>((event, emit) async {
       try {
-        // final campaignIdRes = await AssignedAccountsRepository()
-        //     .getCurrentCaimpaign()
-        //     .catchError((onError) {
-        //   throw onError.toString();
-        // });
-        // if (campaignIdRes.statusCode == 200) {
-        //   if (campaignIdRes.campaignList.isNotEmpty) {
-        //     campaignId = campaignIdRes.campaignList.first.campaignId;
-        //   }
-        // }
-
         final accountResponse =
             await repo.getAccountname().catchError((onError) {
           throw onError.toString();
         });
-        // if (accountResponse.statusCode == 200) {
-        //   if (accountResponse.orgList.isNotEmpty) {
-
-        //   }
-
-        // }
         orgList = accountResponse.orgList;
         filteredList = orgList;
         emit(ShowAccountsNameState());
@@ -47,8 +34,8 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
     });
 
     on<ShowSelectedAccountEvent>((event, emit) {
-      showSelectedName = event.accountName;
-      add(ShowContactListEvent(event.orgId));
+      showSelectedName = event.orgList.orgName;
+      add(ShowContactListEvent(event.orgList.orgId));
     });
 
     on<ShowContactListEvent>((event, emit) async {

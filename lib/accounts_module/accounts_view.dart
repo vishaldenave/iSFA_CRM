@@ -14,9 +14,6 @@ class AccountsView extends StatefulWidget {
 }
 
 class _AccountsViewState extends State<AccountsView> {
-  bool isAccountNameSelecting = false;
-  bool showContants = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,93 +24,115 @@ class _AccountsViewState extends State<AccountsView> {
       body: RepositoryProvider(
         create: (context) => AccountsRepository(),
         child: BlocProvider(
-          create: (context) => AccountsBloc(context.read()),
+          create: (context) =>
+              AccountsBloc(context.read())..add(ShowAccountsNameEvent()),
           child: BlocConsumer<AccountsBloc, AccountsState>(
             listener: (context, state) {},
             builder: (context, state) {
               var bloc = context.read<AccountsBloc>();
-              return Column(
-                children: [
-                  Card(
-                    margin: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 0),
-                    elevation: 2,
-                    child: ListTile(
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    InkWell(
                       onTap: () {
-                        isAccountNameSelecting = !isAccountNameSelecting;
-                        showContants = false;
-                        bloc.add(ShowAccountsNameEvent());
+                        bloc.add(ChangeAccountSelectEvent(
+                            !bloc.isAccountNameSelecting));
+                        bloc.showContants = false;
                       },
-                      title: const Text("Account Name"),
-                      subtitle: state is ShowSelectedAccountState
-                          ? Text(bloc.showSelectedName)
-                          : const Text("Select"),
-                      trailing: Icon(isAccountNameSelecting
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down),
-                    ),
-                  ),
-                  if (isAccountNameSelecting &&
-                      (state is ShowAccountsNameState || state is SearchState))
-                    Card(
-                      margin: EdgeInsets.fromLTRB(20.w, 0, 20.w, 20.w),
-                      elevation: 2,
-                      child: Padding(
-                        padding: EdgeInsets.all(10.w),
-                        child: Column(
-                          children: [
-                            Material(
-                              elevation: 2,
-                              borderRadius: BorderRadius.circular(5.w),
-                              color: Colors.white,
-                              child: TextField(
-                                onChanged: (value) =>
-                                    bloc.add(SearchEvent(value)),
-                                decoration: const InputDecoration(
-                                  hintText: 'Search...',
-                                  border: InputBorder.none,
-                                  prefixIcon: Icon(Icons.search),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                                height: 200.h,
-                                child: bloc.orgList.isNotEmpty
-                                    ? ListView.builder(
-                                        itemCount: bloc.filteredList.length,
-                                        itemBuilder: (context, index) =>
-                                            SizedBox(
-                                          height: 30.h,
-                                          child: ListTile(
-                                            onTap: () {
-                                              showContants = true;
-                                              isAccountNameSelecting = false;
-                                              bloc.add(ShowSelectedAccountEvent(
-                                                  bloc.filteredList[index]
-                                                      .orgName,
-                                                  bloc.filteredList[index]
-                                                      .orgId));
-                                            },
-                                            contentPadding:
-                                                const EdgeInsets.all(0),
-                                            title: Text(
-                                              bloc.filteredList[index].orgName,
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 13.sp),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : const Center(
-                                        child: Text("No Data found."),
-                                      )),
-                          ],
+                      child: Card(
+                        margin: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 0),
+                        elevation: 2,
+                        child: ListTile(
+                          title: Text(
+                            "Account Name",
+                            style: TextStyle(
+                                fontSize: 16.sp, fontWeight: FontWeight.w400),
+                          ),
+                          subtitle: Text(bloc.showSelectedName.isEmpty
+                              ? "Select"
+                              : bloc.showSelectedName),
+                          trailing: Icon(bloc.isAccountNameSelecting
+                              ? Icons.keyboard_arrow_up
+                              : Icons.keyboard_arrow_down),
                         ),
                       ),
                     ),
-                  if (showContants)
-                    Expanded(
-                      child: ListView.separated(
+                    if (bloc.isAccountNameSelecting)
+                      Card(
+                        margin: EdgeInsets.fromLTRB(20.w, 0, 20.w, 20.w),
+                        elevation: 2,
+                        child: Padding(
+                          padding: EdgeInsets.all(10.w),
+                          child: Column(
+                            children: [
+                              Material(
+                                elevation: 2,
+                                borderRadius: BorderRadius.circular(5.w),
+                                color: Colors.white,
+                                child: TextField(
+                                  onChanged: (value) =>
+                                      bloc.add(SearchEvent(value)),
+                                  decoration: const InputDecoration(
+                                    hintText: 'Search...',
+                                    border: InputBorder.none,
+                                    prefixIcon: Icon(Icons.search),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: 200.h,
+                                  child: bloc.orgList.isNotEmpty
+                                      ? ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: bloc.filteredList.length,
+                                          itemBuilder: (context, index) =>
+                                              InkWell(
+                                            onTap: () {
+                                              bloc.showContants = true;
+                                              bloc.add(ChangeAccountSelectEvent(
+                                                  false));
+
+                                              bloc.add(ShowSelectedAccountEvent(
+                                                  bloc.filteredList[index]));
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                  bloc.filteredList[index]
+                                                      .orgName,
+                                                  style: TextStyle(
+                                                      color: Colors.black87,
+                                                      fontSize: 14.sp)),
+                                            ),
+                                          ),
+
+                                          //     SizedBox(
+                                          //   height: 30.h,
+                                          //   child: ListTile(
+
+                                          //     contentPadding:
+                                          //         const EdgeInsets.all(0),
+                                          //     title: Text(
+                                          //       bloc.filteredList[index]
+                                          //           .orgName,
+                                          //       style: TextStyle(
+                                          //           color: Colors.grey,
+                                          //           fontSize: 13.sp),
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                        )
+                                      : const Center(
+                                          child: Text("No Data found."),
+                                        )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    if (bloc.showContants)
+                      ListView.separated(
+                          shrinkWrap: true,
                           itemCount: bloc.contactList.length,
                           padding: EdgeInsets.all(10.w),
                           separatorBuilder: (context, index) => SizedBox(
@@ -165,8 +184,8 @@ class _AccountsViewState extends State<AccountsView> {
                                   ),
                                 ),
                               )),
-                    )
-                ],
+                  ],
+                ),
               );
             },
           ),
