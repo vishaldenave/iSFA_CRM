@@ -14,3 +14,13 @@ class ShowContactListState extends AccountsState {}
 class SearchState extends AccountsState {}
 
 class ChangeState extends AccountsState {}
+
+class AccountErrorMesssage extends AccountsState {
+  final String message;
+  AccountErrorMesssage(this.message);
+}
+
+class MoveToSaveFeedback extends AccountsState {
+  final String path;
+  MoveToSaveFeedback(this.path);
+}

@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isfa_crm/accounts_module/accounts_repository.dart';
 import 'package:isfa_crm/accounts_module/models/accounts_name_model.dart';
 import 'package:isfa_crm/accounts_module/models/contact_list_model.dart';
+import 'package:isfa_crm/utility/method_chanel.dart';
 
 part 'accounts_event.dart';
 part 'accounts_state.dart';
@@ -68,6 +70,31 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
       }
       emit(SearchState());
     });
-    on<MakeCallEvent>((event, emit) => {});
+    on<MakeCallEvent>((event, emit) async {
+      bool hasAssessability = await MyMethodChanel.hasAssessability();
+      if (hasAssessability) {
+        if (await MyMethodChanel.hasPermissions) {
+          const MethodChannel("audio_received")
+              .setMethodCallHandler((call) async {
+            switch (call.method) {
+              case "audioFile":
+                String file = call.arguments as String;
+                emit(MoveToSaveFeedback(file));
+                break;
+            }
+          });
+          await MyMethodChanel.start("Madan_Gopal", "6284184523"
+              // event.contactList.contactName ?? "",
+              // event.contactList.mobile ?? ""
+              );
+        } else {
+          emit(AccountErrorMesssage(
+              "Please open application settings & give available permissions to application."));
+        }
+      } else {
+        emit(AccountErrorMesssage(
+            "Please Provide Accessibility to the Application"));
+      }
+    });
   }
 }

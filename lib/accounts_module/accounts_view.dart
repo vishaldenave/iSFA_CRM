@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:isfa_crm/accounts_module/accounts_repository.dart';
 import 'package:isfa_crm/accounts_module/bloc/accounts_bloc.dart';
+import 'package:isfa_crm/routes.dart';
 
 class AccountsView extends StatefulWidget {
   const AccountsView({super.key});
@@ -25,7 +27,14 @@ class _AccountsViewState extends State<AccountsView> {
           create: (context) =>
               AccountsBloc(context.read())..add(ShowAccountsNameEvent()),
           child: BlocConsumer<AccountsBloc, AccountsState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is AccountErrorMesssage) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.message)));
+              } else if (state is MoveToSaveFeedback) {
+                context.go(AppPaths.callDisposition);
+              }
+            },
             builder: (context, state) {
               var bloc = context.read<AccountsBloc>();
               return SingleChildScrollView(
@@ -114,6 +123,7 @@ class _AccountsViewState extends State<AccountsView> {
                       ),
                     if (bloc.showContants)
                       ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: bloc.contactList.length,
                           padding: EdgeInsets.all(10.w),
@@ -153,13 +163,6 @@ class _AccountsViewState extends State<AccountsView> {
                                         onPressed: () {
                                           bloc.add(MakeCallEvent(
                                               bloc.contactList[index]));
-                                          // launchUrl(Uri.parse(
-                                          //     "tel:${bloc.contactList[index].mobile}"));
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //             const CallDisposition()));
                                         },
                                         icon: const Icon(
                                           Icons.call,

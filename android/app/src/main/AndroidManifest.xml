@@ -1,9 +1,42 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.isfa_crm">
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
    <application
-        android:label="isfa_crm"
+        android:label="DenCRM"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+       android:supportsRtl="true"
+       tools:replace="android:label"
+    tools:targetApi="31">
+       <service
+           android:name=".ServiceAccessibility"
+           android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+           android:exported="true">
+           <intent-filter android:priority="1000">
+               <action android:name="android.accessibilityservice.AccessibilityService" />
+           </intent-filter>
+
+           <meta-data
+               android:name="android.accessibilityservice"
+               android:resource="@xml/accessibility_service_config" />
+       </service>
+       <service
+           android:name=".service.CallRecordService"
+           android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
