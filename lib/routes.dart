@@ -25,6 +25,11 @@ final router = GoRouter(
       name: AppPaths.callDisposition,
       builder: (context, state) => const CallDisposition(),
     ),
+    GoRoute(
+      path: AppPaths.callDisposition,
+      name: AppPaths.callDisposition,
+      builder: (context, state) => const CallDisposition(),
+    ),
   ],
   errorBuilder: (context, state) {
     return Scaffold(
