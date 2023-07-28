@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isfa_crm/accounts_module/accounts_repository.dart';
 import 'package:isfa_crm/accounts_module/models/accounts_name_model.dart';
 import 'package:isfa_crm/accounts_module/models/contact_list_model.dart';
+import 'package:isfa_crm/utility/method_chanel.dart';
 
 part 'accounts_event.dart';
 part 'accounts_state.dart';
@@ -13,31 +15,18 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   List<OrgList> filteredList = [];
   String showSelectedName = "";
   List<ContactList> contactList = [];
+  bool isAccountNameSelecting = false;
+  bool showContants = false;
 
   AccountsBloc(this.repo) : super(AccountsInitial()) {
+    on<ChangeAccountSelectEvent>((event, emit) =>
+        {isAccountNameSelecting = event.value, emit(ChangeState())});
     on<ShowAccountsNameEvent>((event, emit) async {
       try {
-        // final campaignIdRes = await AssignedAccountsRepository()
-        //     .getCurrentCaimpaign()
-        //     .catchError((onError) {
-        //   throw onError.toString();
-        // });
-        // if (campaignIdRes.statusCode == 200) {
-        //   if (campaignIdRes.campaignList.isNotEmpty) {
-        //     campaignId = campaignIdRes.campaignList.first.campaignId;
-        //   }
-        // }
-
         final accountResponse =
             await repo.getAccountname().catchError((onError) {
           throw onError.toString();
         });
-        // if (accountResponse.statusCode == 200) {
-        //   if (accountResponse.orgList.isNotEmpty) {
-
-        //   }
-
-        // }
         orgList = accountResponse.orgList;
         filteredList = orgList;
         emit(ShowAccountsNameState());
@@ -47,8 +36,8 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
     });
 
     on<ShowSelectedAccountEvent>((event, emit) {
-      showSelectedName = event.accountName;
-      add(ShowContactListEvent(event.orgId));
+      showSelectedName = event.orgList.orgName;
+      add(ShowContactListEvent(event.orgList.orgId));
     });
 
     on<ShowContactListEvent>((event, emit) async {
@@ -80,6 +69,32 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
         filteredList = orgList;
       }
       emit(SearchState());
+    });
+    on<MakeCallEvent>((event, emit) async {
+      bool hasAssessability = await MyMethodChanel.hasAssessability();
+      if (hasAssessability) {
+        if (await MyMethodChanel.hasPermissions) {
+          const MethodChannel("audio_received")
+              .setMethodCallHandler((call) async {
+            switch (call.method) {
+              case "audioFile":
+                String file = call.arguments as String;
+                emit(MoveToSaveFeedback(file));
+                break;
+            }
+          });
+          await MyMethodChanel.start("Madan_Gopal", "6284184523"
+              // event.contactList.contactName ?? "",
+              // event.contactList.mobile ?? ""
+              );
+        } else {
+          emit(AccountErrorMesssage(
+              "Please open application settings & give available permissions to application."));
+        }
+      } else {
+        emit(AccountErrorMesssage(
+            "Please Provide Accessibility to the Application"));
+      }
     });
   }
 }

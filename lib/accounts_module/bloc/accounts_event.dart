@@ -6,9 +6,8 @@ abstract class AccountsEvent {}
 class ShowAccountsNameEvent extends AccountsEvent {}
 
 class ShowSelectedAccountEvent extends AccountsEvent {
-  final String accountName;
-  final String orgId;
-  ShowSelectedAccountEvent(this.accountName, this.orgId);
+  final OrgList orgList;
+  ShowSelectedAccountEvent(this.orgList);
 }
 
 class ShowContactListEvent extends AccountsEvent {
@@ -19,4 +18,14 @@ class ShowContactListEvent extends AccountsEvent {
 class SearchEvent extends AccountsEvent {
   final String value;
   SearchEvent(this.value);
+}
+
+class ChangeAccountSelectEvent extends AccountsEvent {
+  final bool value;
+  ChangeAccountSelectEvent(this.value);
+}
+
+class MakeCallEvent extends AccountsEvent {
+  final ContactList contactList;
+  MakeCallEvent(this.contactList);
 }

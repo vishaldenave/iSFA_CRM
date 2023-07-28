@@ -21,3 +21,5 @@ class SearchEvent extends AssignedAccountsEvent {
   final String value;
   SearchEvent(this.value);
 }
+
+class ChangeStateEvent extends AssignedAccountsEvent {}

@@ -11,108 +11,113 @@ class AssignedAccountView extends StatefulWidget {
 }
 
 class _AssignedAccountViewState extends State<AssignedAccountView> {
-  var tabbsData = [
-    TabModel("PM", true),
-    TabModel("Team Lead", false),
-  ];
   String programManager = AppStorage().userDetail?.programManager ?? "";
   String teamLead = AppStorage().userDetail?.teamLeader ?? "";
-  int tabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         centerTitle: true,
         title: const Text("Assigned Accounts"),
         bottom: PreferredSize(
-            preferredSize: Size.fromHeight(70.h),
+            preferredSize: Size.fromHeight(60.h),
             child: Column(
               children: [
                 Padding(
                   padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: List.generate(
-                      tabbsData.length,
-                      (index) => InkWell(
-                          onTap: () {
-                            for (var tab in tabbsData) {
-                              tab.selectChange(false);
-                            }
-                            tabbsData[index].selectChange(true);
-                            tabIndex = index;
-                            setState(() {});
-                          },
-                          child: AssignedAccTab(data: tabbsData[index])),
-                    ),
-                  ),
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              width: 100.w,
+                              height: 30.h,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue, //: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey.shade100,
+                                        spreadRadius: 0.5,
+                                        offset: const Offset(0, 0.5))
+                                  ],
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: const Center(
+                                child: Text("PM",
+                                    style: TextStyle(
+                                      color: Colors.white, //: Colors.blue,
+                                      fontWeight:
+                                          FontWeight.bold, //: FontWeight.normal
+                                    )),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              children: [
+                                NameInitial(name: programManager),
+                                SizedBox(
+                                  width: 3.w,
+                                ),
+                                Text(
+                                  programManager,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Container(
+                              width: 100.w,
+                              height: 30.h,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue, //: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey.shade100,
+                                        spreadRadius: 0.5,
+                                        offset: const Offset(0, 0.5))
+                                  ],
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: const Center(
+                                child: Text("Team Lead",
+                                    style: TextStyle(
+                                      color: Colors.white, //: Colors.blue,
+                                      fontWeight:
+                                          FontWeight.bold, //: FontWeight.normal
+                                    )),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              children: [
+                                NameInitial(name: teamLead),
+                                SizedBox(
+                                  width: 3.w,
+                                ),
+                                Text(
+                                  teamLead,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      ]),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      NameInitial(
-                          name: tabbsData[tabIndex].name == "PM"
-                              ? programManager
-                              : teamLead),
-                      SizedBox(
-                        width: 3.w,
-                      ),
-                      Text(
-                        tabbsData[tabIndex].name == "PM"
-                            ? programManager
-                            : teamLead,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
+                const SizedBox(
+                  height: 10,
                 ),
               ],
             )),
       ),
       body: const PMAccountView(),
     );
-  }
-}
-
-class AssignedAccTab extends StatelessWidget {
-  final TabModel data;
-  const AssignedAccTab({super.key, required this.data});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 100.w,
-      height: 30.h,
-      decoration: BoxDecoration(
-          color: data.isSelected ? Colors.blue : Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.grey.shade400,
-                spreadRadius: 1.w,
-                offset: const Offset(0, 1))
-          ],
-          borderRadius: BorderRadius.circular(20)),
-      child: Center(
-        child: Text(data.name,
-            style: TextStyle(
-                color: data.isSelected ? Colors.white : Colors.blue,
-                fontWeight:
-                    data.isSelected ? FontWeight.bold : FontWeight.normal)),
-      ),
-    );
-  }
-}
-
-class TabModel {
-  final String name;
-  bool isSelected;
-
-  TabModel(this.name, this.isSelected);
-
-  void selectChange(bool val) {
-    isSelected = val;
   }
 }

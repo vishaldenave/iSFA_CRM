@@ -49,8 +49,6 @@ class TabbarView extends StatelessWidget {
                   tabs: [
                     Tab(icon: Icon(Icons.home)),
                     Tab(icon: Icon(Icons.groups_2)),
-                    // TabbarItem(icon: Icons.home, isSelected: true),
-                    // TabbarItem(icon: Icons.groups_2, isSelected: false),
                   ],
                 ),
               ),
