@@ -37,6 +37,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               .catchError((onError) {
             throw onError.toString();
           });
+
           if (loginRespone.statusCode == 200) {
             AppStorage().userDetail = loginRespone;
             emit(LoginedSuccessfullState());

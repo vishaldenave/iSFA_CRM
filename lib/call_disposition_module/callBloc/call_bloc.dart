@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isfa_crm/accounts_module/models/call_data.dart';
-import 'package:isfa_crm/call_disposition_module/call_model.dart';
-import 'package:isfa_crm/call_disposition_module/call_repository.dart';
+import 'package:isfa_crm/call_disposition_module/models/call_model.dart';
+import 'package:isfa_crm/call_disposition_module/repositories/call_repository.dart';
 
 part 'call_event.dart';
 part 'call_state.dart';
@@ -79,8 +79,10 @@ class CallBloc extends Bloc<CallEvent, CallState> {
       }
     });
 
-    on<OnChangeCallSubStatusEvent>((event, emit) async {
+    on<OnChangeCallSubStatusEvent>((event, emit) {
       emit(OnChangeCallSubStatusState());
     });
+
+    on<OnSubmitFeedbackEvent>((event, emit) async {});
   }
 }

@@ -5,13 +5,16 @@ abstract class CallEvent {}
 
 class ShowCallStatusListEvent extends CallEvent {}
 
-class OnChangeCallStatusEvent extends CallEvent {}
+class OnChangeCallStatusEvent extends CallEvent {
+  final String? selectedCallStatus;
+  OnChangeCallStatusEvent(this.selectedCallStatus);
+}
 
 class ShowContactStatusListEvent extends CallEvent {}
 
 class OnChangeContactStatusEvent extends CallEvent {
-  final int id;
-  OnChangeContactStatusEvent(this.id);
+  final ContactStatusList? selectedContactStatus;
+  OnChangeContactStatusEvent(this.selectedContactStatus);
 }
 
 class ShowCallSubStatusListEvent extends CallEvent {
@@ -20,3 +23,5 @@ class ShowCallSubStatusListEvent extends CallEvent {
 }
 
 class OnChangeCallSubStatusEvent extends CallEvent {}
+
+class OnSubmitFeedbackEvent extends CallEvent {}

@@ -126,3 +126,95 @@ class CallSubStatusModel {
     return data;
   }
 }
+
+class CallFeedbackModel {
+  CallFeedbackModel({
+    required this.userId,
+    required this.campaignId,
+    required this.orgId,
+    required this.sessionId,
+    required this.contactId,
+    required this.contactStatus,
+    required this.callStatus,
+    required this.contactSubStatus,
+    required this.remarks,
+    required this.callDuration,
+    required this.callerId,
+  });
+  late final String userId;
+  late final String campaignId;
+  late final String orgId;
+  late final String sessionId;
+  late final String contactId;
+  late final String contactStatus;
+  late final String callStatus;
+  late final String contactSubStatus;
+  late final String remarks;
+  late final String callDuration;
+  late final String callerId;
+
+  factory CallFeedbackModel.fromRawJson(String str) =>
+      CallFeedbackModel.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  CallFeedbackModel.fromJson(Map<String, dynamic> json) {
+    userId = json['userId'];
+    campaignId = json['campaignId'];
+    orgId = json['orgId'];
+    sessionId = json['sessionId'];
+    contactId = json['contactId'];
+    contactStatus = json['contactStatus'];
+    callStatus = json['callStatus'];
+    contactSubStatus = json['contactSubStatus'];
+    remarks = json['remarks'];
+    callDuration = json['callDuration'];
+    callerId = json['callerId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['userId'] = userId;
+    data['campaignId'] = campaignId;
+    data['orgId'] = orgId;
+    data['sessionId'] = sessionId;
+    data['contactId'] = contactId;
+    data['contactStatus'] = contactStatus;
+    data['callStatus'] = callStatus;
+    data['contactSubStatus'] = contactSubStatus;
+    data['remarks'] = remarks;
+    data['callDuration'] = callDuration;
+    data['callerId'] = callerId;
+    return data;
+  }
+}
+
+class CallFeedbackBodyModel {
+  CallFeedbackBodyModel({
+    required this.status,
+    required this.message,
+    required this.statusCode,
+  });
+  late final String status;
+  late final String message;
+  late final int statusCode;
+
+  factory CallFeedbackBodyModel.fromRawJson(String str) =>
+      CallFeedbackBodyModel.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  CallFeedbackBodyModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    statusCode = json['statusCode'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    data['statusCode'] = statusCode;
+    return data;
+  }
+}

@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart';
-import 'package:isfa_crm/call_disposition_module/call_model.dart';
+import 'package:isfa_crm/call_disposition_module/models/call_model.dart';
 import 'package:isfa_crm/utility/app_storage.dart';
-import '../utility/app_constants.dart';
+import '../../utility/app_constants.dart';
 
 class CallRepository {
   var userDetails = AppStorage().userDetail;
@@ -73,6 +74,24 @@ class CallRepository {
       throw response.body.isEmpty
           ? "Something went wrong"
           : json.decode(response.body)['message'] ?? "Something went wrong";
+    }
+  }
+
+  Future<CallFeedbackBodyModel> saveFeedback(
+      String feedback, String path) async {
+    final dio = Dio();
+    final callFormData = FormData.fromMap({'data': feedback, 'file': path});
+    final response = await dio.post(
+        "https://devapps.denave.com:8448/DenCRMCalling/api/saveCallDetails",
+        data: callFormData);
+    if (response.statusCode == 200) {
+      return CallFeedbackBodyModel.fromRawJson(response.data);
+    } else if (response.statusCode == 401) {
+      throw "Error";
+    } else {
+      throw response.data.isEmpty
+          ? "Something went wrong"
+          : json.decode(response.data)['message'] ?? "Something went wrong";
     }
   }
 }

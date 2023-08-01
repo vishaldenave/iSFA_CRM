@@ -16,3 +16,5 @@ class OnChangeCallSubStatusState extends CallState {}
 class ShowContactStatusListState extends CallState {}
 
 class OnChangeContactStatusState extends CallState {}
+
+class OnSubmitFeedbackState extends CallState {}
