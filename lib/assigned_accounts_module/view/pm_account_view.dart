@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:isfa_crm/assigned_accounts_module/assigned_accounts_repository.dart';
 import 'package:isfa_crm/assigned_accounts_module/bloc/assigned_accounts_bloc.dart';
-import 'package:isfa_crm/assigned_accounts_module/models/assigned_accounts_model.dart';
-import 'package:isfa_crm/utility/app_storage.dart';
 import 'package:isfa_crm/utility/extensions.dart';
 
 class PMAccountView extends StatefulWidget {
@@ -14,13 +12,8 @@ class PMAccountView extends StatefulWidget {
 }
 
 class _PMAccountViewState extends State<PMAccountView> {
-  AssignedAccountsModel? assignedAccountsModel;
-  String searchQuery = "";
-
   @override
   Widget build(BuildContext context) {
-    String role = AppStorage().userDetail?.role ?? "";
-
     return Scaffold(
       body: RepositoryProvider(
         create: (context) => AssignedAccountsRepository(),
@@ -45,7 +38,7 @@ class _PMAccountViewState extends State<PMAccountView> {
                                   backgroundColor: Colors.red,
                                   elevation: 5,
                                   padding: const EdgeInsets.all(15)),
-                              child: Text(role,
+                              child: Text(bloc.role,
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 15.sp)))
                         ],

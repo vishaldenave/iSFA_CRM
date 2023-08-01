@@ -14,6 +14,7 @@ class AssignedAccountsBloc
   List<CampaignList> allCampaign = [];
   List<CampaignList> filteredList = [];
   bool isCaimpaignNameSelecting = false;
+  String role = AppStorage().userDetail?.role ?? "";
 
   AssignedAccountsBloc(this.repo) : super(AssignedAccountsInitial()) {
     on<ChangeStateEvent>((event, emit) => emit(SearchState()));

@@ -17,9 +17,6 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final passwordController = TextEditingController();
-  final usernameController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,14 +61,15 @@ class _LoginViewState extends State<LoginView> {
                       child: Column(
                         children: [
                           TextField(
-                            controller: usernameController,
+                            controller: bloc.usernameController,
                             inputFormatters: [
                               FilteringTextInputFormatter.deny(" ")
                             ],
                             onChanged: (change) {
                               BlocProvider.of<LoginBloc>(context).add(
-                                  LoginTextChangeEvent(usernameController.text,
-                                      passwordController.text));
+                                  LoginTextChangeEvent(
+                                      bloc.usernameController.text,
+                                      bloc.passwordController.text));
                             },
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(
@@ -86,14 +84,14 @@ class _LoginViewState extends State<LoginView> {
                             height: 20,
                           ),
                           TextField(
-                            controller: passwordController,
+                            controller: bloc.passwordController,
                             inputFormatters: [
                               FilteringTextInputFormatter.deny(" ")
                             ],
                             onChanged: (change) {
                               bloc.add(LoginTextChangeEvent(
-                                  usernameController.text,
-                                  passwordController.text));
+                                  bloc.usernameController.text,
+                                  bloc.passwordController.text));
                             },
                             keyboardType: TextInputType.visiblePassword,
                             obscureText:
@@ -135,8 +133,8 @@ class _LoginViewState extends State<LoginView> {
                                 if (state is! LogInLoadingState) {
                                   context.hideKeyboard();
                                   bloc.add(LoginSubmitEvent(
-                                      usernameController.text,
-                                      passwordController.text));
+                                      bloc.usernameController.text,
+                                      bloc.passwordController.text));
                                 }
                               },
                               child: Text(

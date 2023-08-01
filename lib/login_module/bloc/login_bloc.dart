@@ -9,6 +9,8 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginRepository repo;
   bool isShowingPassword = false;
+  final passwordController = TextEditingController();
+  final usernameController = TextEditingController();
 
   LoginBloc(this.repo) : super(LoginInitialState()) {
     on<LoginShowPasswordButtonEvent>((event, emit) {

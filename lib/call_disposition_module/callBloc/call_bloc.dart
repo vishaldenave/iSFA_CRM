@@ -9,10 +9,14 @@ part 'call_state.dart';
 
 class CallBloc extends Bloc<CallEvent, CallState> {
   CallRepository repo;
-  List<String>? callStatus;
-  List<ContactStatusList>? contactStatus;
-  List<String>? callSubStatus;
+  List<String>? callStatusList;
+  List<ContactStatusList>? contactStatusList;
+  List<String> callSubStatusList = [];
   final CallData callData;
+  String? selectedCallStatus;
+  ContactStatusList? selectedContactStatus;
+  String? selectedCallSubStatus;
+  TextEditingController remarksController = TextEditingController();
 
   CallBloc(this.repo, this.callData) : super(CallInitial()) {
     on<ShowCallStatusListEvent>((event, emit) async {
@@ -23,7 +27,7 @@ class CallBloc extends Bloc<CallEvent, CallState> {
         });
 
         if (callStatusRespone.statusCode == 200) {
-          callStatus = callStatusRespone.callStatusList;
+          callStatusList = callStatusRespone.callStatusList;
           emit(ShowCallStatusListState());
         } else {
           throw "Error";
@@ -34,7 +38,7 @@ class CallBloc extends Bloc<CallEvent, CallState> {
     });
 
     on<OnChangeCallStatusEvent>((event, emit) async {
-      add(ShowContactStatusListEvent());
+      selectedCallStatus = event.selectedCallStatus;
       emit(OnChangeCallStatusState());
     });
 
@@ -46,7 +50,7 @@ class CallBloc extends Bloc<CallEvent, CallState> {
         });
 
         if (callStatusRespone.statusCode == 200) {
-          contactStatus = callStatusRespone.contactStatusList;
+          contactStatusList = callStatusRespone.contactStatusList;
           emit(ShowContactStatusListState());
         } else {
           throw "Error";
@@ -57,8 +61,9 @@ class CallBloc extends Bloc<CallEvent, CallState> {
     });
 
     on<OnChangeContactStatusEvent>((event, emit) async {
+      selectedContactStatus = event.selectedContactStatus;
       emit(OnChangeContactStatusState());
-      add(ShowCallSubStatusListEvent(event.id));
+      add(ShowCallSubStatusListEvent(event.selectedContactStatus?.id ?? -1));
     });
 
     on<ShowCallSubStatusListEvent>((event, emit) async {
@@ -69,7 +74,7 @@ class CallBloc extends Bloc<CallEvent, CallState> {
         });
 
         if (callStatusRespone.statusCode == 200) {
-          callSubStatus = callStatusRespone.contactSubStatusList;
+          callSubStatusList = callStatusRespone.contactSubStatusList;
           emit(ShowCallSubStatusListState());
         } else {
           throw "Error";
@@ -80,9 +85,35 @@ class CallBloc extends Bloc<CallEvent, CallState> {
     });
 
     on<OnChangeCallSubStatusEvent>((event, emit) {
+      selectedCallSubStatus = event.selectedCallSubStatus;
       emit(OnChangeCallSubStatusState());
     });
 
-    on<OnSubmitFeedbackEvent>((event, emit) async {});
+    on<OnSubmitFeedbackEvent>((event, emit) async {
+      if (selectedCallStatus == null) {
+        //please choose call status
+      } else if (selectedContactStatus == null) {
+        //please choose contact status
+      } else if (selectedCallSubStatus == null) {
+        //please choose call sub status
+      } else if (remarksController.text.isEmpty) {
+        //please enter remarks
+      } else {
+        CallFeedbackModel callFeedbackModel = CallFeedbackModel(
+            userId: "",
+            campaignId: callData.contactList.campaignId,
+            orgId: callData.contactList.orgId,
+            sessionId: "",
+            contactId: callData.contactList.contactId ?? "",
+            contactStatus: selectedContactStatus?.contactStatus ?? "",
+            callStatus: selectedCallStatus ?? "",
+            contactSubStatus: selectedCallSubStatus ?? "",
+            remarks: remarksController.text,
+            callDuration: callData.duration,
+            callerId: "hi");
+
+        repo.saveFeedback(callFeedbackModel, callData.path);
+      }
+    });
   }
 }

@@ -141,17 +141,17 @@ class CallFeedbackModel {
     required this.callDuration,
     required this.callerId,
   });
-  late final String userId;
-  late final String campaignId;
-  late final String orgId;
-  late final String sessionId;
-  late final String contactId;
-  late final String contactStatus;
-  late final String callStatus;
-  late final String contactSubStatus;
-  late final String remarks;
-  late final String callDuration;
-  late final String callerId;
+  late String userId;
+  late String campaignId;
+  late String orgId;
+  late String sessionId;
+  late String contactId;
+  late String contactStatus;
+  late String callStatus;
+  late String contactSubStatus;
+  late String remarks;
+  late String callDuration;
+  late String callerId;
 
   factory CallFeedbackModel.fromRawJson(String str) =>
       CallFeedbackModel.fromJson(json.decode(str));

@@ -22,6 +22,9 @@ class ShowCallSubStatusListEvent extends CallEvent {
   ShowCallSubStatusListEvent(this.id);
 }
 
-class OnChangeCallSubStatusEvent extends CallEvent {}
+class OnChangeCallSubStatusEvent extends CallEvent {
+  final String? selectedCallSubStatus;
+  OnChangeCallSubStatusEvent(this.selectedCallSubStatus);
+}
 
 class OnSubmitFeedbackEvent extends CallEvent {}
