@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:isfa_crm/call_disposition_module/bloc/call_bloc.dart';
+import 'package:isfa_crm/accounts_module/models/call_data.dart';
+import 'package:isfa_crm/call_disposition_module/callBloc/call_bloc.dart';
+
 import 'package:isfa_crm/call_disposition_module/call_model.dart';
 import 'package:isfa_crm/call_disposition_module/call_repository.dart';
 
 class CallDisposition extends StatefulWidget {
-  const CallDisposition({super.key});
+  final CallData callData;
+  const CallDisposition(this.callData, {super.key});
 
   @override
   State<CallDisposition> createState() => _CallDispositionState();
@@ -30,8 +33,8 @@ class _CallDispositionState extends State<CallDisposition> {
       body: RepositoryProvider(
         create: (context) => CallRepository(),
         child: BlocProvider(
-          create: (context) =>
-              CallBloc(context.read())..add(ShowCallStatusListEvent()),
+          create: (context) => CallBloc(context.read(), widget.callData)
+            ..add(ShowCallStatusListEvent()),
           child: BlocConsumer<CallBloc, CallState>(
             listener: (context, state) {},
             builder: (context, state) {
@@ -104,9 +107,6 @@ class _CallDispositionState extends State<CallDisposition> {
                           ),
                         ),
                         SizedBox(height: 18.h),
-                        // if (state is ShowContactStatusListState ||
-                        //     state is ShowCallSubStatusListState ||
-                        //     state is OnChangeCallSubStatusState)
                         Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
@@ -154,8 +154,6 @@ class _CallDispositionState extends State<CallDisposition> {
                                         contactStatusValue = newValue;
                                         bloc.add(OnChangeContactStatusEvent(
                                             newValue?.id ?? -1));
-                                        // contactStatusList =
-                                        //     bloc.contactStatus;
                                       },
                                     ),
                                   ),

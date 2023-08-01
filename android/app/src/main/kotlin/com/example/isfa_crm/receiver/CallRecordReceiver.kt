@@ -1,12 +1,14 @@
 package com.example.isfa_crm.receiver
 
+import LogUtils
+import PrefsHelper
 import android.content.Context
 import android.media.MediaRecorder
 import com.example.isfa_crm.CallRecord
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
 import java.io.IOException
-import java.util.Date
+
 
 open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallReceiver() {
 
@@ -22,38 +24,42 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
     private var audioFile: File? = null
     private var isRecordStarted = false
 
-    override fun onIncomingCallReceived(context: Context, number: String?, start: Date) {
+
+    override fun onIncomingCallReceived(context: Context, start: Long) {
+
     }
 
-    override fun onIncomingCallAnswered(context: Context, number: String?, start: Date) {
-        startRecord(context, "incoming", number)
+    override fun onIncomingCallAnswered(context: Context, start: Long) {
+        startRecord(context, "incoming")
     }
 
-    override fun onIncomingCallEnded(context: Context, number: String?, start: Date, end: Date) {
-        stopRecord(context)
+    override fun onIncomingCallEnded(context: Context,start: Long, end: Long) {
+        stopRecord(context,end - start)
     }
 
-    override fun onOutgoingCallStarted(context: Context, number: String?, start: Date) {
-        startRecord(context, "outgoing", number)
+    override fun onOutgoingCallStarted(context: Context, start: Long) {
+        startRecord(context, "outgoing")
     }
 
-    override fun onOutgoingCallEnded(context: Context, number: String?, start: Date, end: Date) {
-        stopRecord(context)
+    override fun onOutgoingCallEnded(context: Context, start: Long, end: Long) {
+        stopRecord(context,end - start)
     }
 
-    override fun onMissedCall(context: Context, number: String?, start: Date) {
+    override fun onMissedCall(context: Context, start: Long) {
     }
 
     // Derived classes could override these to respond to specific events of interest
     protected open fun onRecordingStarted(context: Context, callRecord: CallRecord, audioFile: File?) {}
 
-    protected open fun onRecordingFinished(context: Context, callRecord: CallRecord, audioFile: File?) {
+    protected open fun onRecordingFinished(context: Context, callRecord: CallRecord, audioFile: File?,duration :Long) {
+        val arguments = HashMap<String, Any>()
+        arguments["path"] = audioFile?.path.toString()
+        arguments["duration"] = (duration/1000).toString()
         MethodChannel(callRecord.flutterEngine.dartExecutor.binaryMessenger, "audio_received")
-        .invokeMethod("audioFile", audioFile?.path)
-       // result.success(audioFile)
+        .invokeMethod("audioFile", arguments)
     }
 
-    private fun startRecord(context: Context, seed: String, phoneNumber: String?) {
+    private fun startRecord(context: Context, seed: String) {
         try {
             val isSaveFile = PrefsHelper.readPrefBool(context, CallRecord.PREF_SAVE_FILE)
             LogUtils.i(TAG, "isSaveFile: $isSaveFile")
@@ -76,7 +82,7 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
                 releaseMediaRecorder()
                 isRecordStarted = false
             } else {
-                if (prepareAudioRecorder(context, seed, phoneNumber)) {
+                if (prepareAudioRecorder(context, seed)) {
                     recorder!!.start()
                     isRecordStarted = true
                     onRecordingStarted(context, callRecord, audioFile)
@@ -97,12 +103,12 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
         }
     }
 
-    private fun stopRecord(context: Context) {
+    private fun stopRecord(context: Context,duration :Long) {
         try {
             if (recorder != null && isRecordStarted) {
                 releaseMediaRecorder()
                 isRecordStarted = false
-                onRecordingFinished(context, callRecord, audioFile)
+                onRecordingFinished(context, callRecord, audioFile,duration)
                 LogUtils.i(TAG, "record stop")
             }
         } catch (e: Exception) {
@@ -112,7 +118,7 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
     }
 
     private fun prepareAudioRecorder(
-        context: Context, seed: String, phoneNumber: String?
+        context: Context, seed: String
     ): Boolean {
         try {
             var fileName = PrefsHelper.readPrefString(context, CallRecord.PREF_FILE_NAME)
@@ -140,10 +146,10 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
                 fileNameBuilder.append("_")
             }
 
-            if (showPhoneNumber && phoneNumber != null) {
-                fileNameBuilder.append(phoneNumber)
-                fileNameBuilder.append("_")
-            }
+//            if (showPhoneNumber && phoneNumber != null) {
+//                fileNameBuilder.append(phoneNumber)
+//                fileNameBuilder.append("_")
+//            }
 
             fileName = fileNameBuilder.toString()
 
@@ -204,4 +210,5 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
         }
         recorder = null
     }
+
 }

@@ -11,11 +11,11 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
         if (intent.action == CallRecordReceiver.ACTION_OUT) {
-            savedNumber = intent.extras!!.getString(CallRecordReceiver.EXTRA_PHONE_NUMBER)
+           // savedNumber = intent.extras!!.getString(CallRecordReceiver.EXTRA_PHONE_NUMBER)
         } else {
             val stateStr = intent.extras!!.getString(TelephonyManager.EXTRA_STATE)
-            val number = intent.extras!!.getString(TelephonyManager.EXTRA_INCOMING_NUMBER)
-            savedNumber = number
+           // val number = intent.extras!!.getString(TelephonyManager.EXTRA_INCOMING_NUMBER)
+           // startTime = number
             var state = 0
 
             when (stateStr) {
@@ -23,32 +23,32 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
                 TelephonyManager.EXTRA_STATE_OFFHOOK -> state = TelephonyManager.CALL_STATE_OFFHOOK
                 TelephonyManager.EXTRA_STATE_RINGING -> state = TelephonyManager.CALL_STATE_RINGING
             }
-            onCallStateChanged(context, state, number)
+            onCallStateChanged(context, state)
         }
     }
 
     //Derived classes should override these to respond to specific events of interest
-    protected abstract fun onIncomingCallReceived(context: Context, number: String?, start: Date)
+    protected abstract fun onIncomingCallReceived(context: Context, start: Long)
 
-    protected abstract fun onIncomingCallAnswered(context: Context, number: String?, start: Date)
+    protected abstract fun onIncomingCallAnswered(context: Context,start: Long)
 
     protected abstract fun onIncomingCallEnded(
-        context: Context, number: String?, start: Date, end: Date
+        context: Context, start: Long, end: Long
     )
 
-    protected abstract fun onOutgoingCallStarted(context: Context, number: String?, start: Date)
+    protected abstract fun onOutgoingCallStarted(context: Context,start: Long)
 
     protected abstract fun onOutgoingCallEnded(
-        context: Context, number: String?, start: Date, end: Date
+        context: Context, start: Long, end: Long
     )
 
-    protected abstract fun onMissedCall(context: Context, number: String?, start: Date)
+    protected abstract fun onMissedCall(context: Context, start: Long)
 
     //Deals with actual events
 
     //Incoming call-  goes from IDLE to RINGING when it rings, to OFFHOOK when it's answered, to IDLE when its hung up
     //Outgoing call-  goes from IDLE to OFFHOOK when it dials out, to IDLE when hung up
-    fun onCallStateChanged(context: Context, state: Int, number: String?) {
+    fun onCallStateChanged(context: Context, state: Int) {
         if (lastState == state) {
             //No change, debounce extras
             return
@@ -57,34 +57,35 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
         when (state) {
             TelephonyManager.CALL_STATE_RINGING -> {
                 isIncoming = true
-                callStartTime = Date()
-                savedNumber = number
-
-                onIncomingCallReceived(context, number, callStartTime)
+                callStartTime = System.currentTimeMillis()
+                onIncomingCallReceived(context, callStartTime)
             }
             TelephonyManager.CALL_STATE_OFFHOOK ->
                 //Transition of ringing->offhook are pickups of incoming calls.  Nothing done on them
                 if (lastState != TelephonyManager.CALL_STATE_RINGING) {
                     isIncoming = false
-                    callStartTime = Date()
+                    callStartTime =System.currentTimeMillis()
 
-                    onOutgoingCallStarted(context, savedNumber, callStartTime)
+                    onOutgoingCallStarted(context,callStartTime)
                 } else {
                     isIncoming = true
-                    callStartTime = Date()
+                    callStartTime =System.currentTimeMillis()
 
-                    onIncomingCallAnswered(context, savedNumber, callStartTime)
+                    onIncomingCallAnswered(context,callStartTime)
                 }
             TelephonyManager.CALL_STATE_IDLE ->
                 //Went to idle-  this is the end of a call.  What type depends on previous state(s)
                 if (lastState == TelephonyManager.CALL_STATE_RINGING) {
                     //Ring but no pickup-  a miss
-                    onMissedCall(context, savedNumber, callStartTime)
+                    onMissedCall(context,callStartTime)
                 } else if (isIncoming) {
-                    onIncomingCallEnded(context, savedNumber, callStartTime, Date())
+                    onIncomingCallEnded(context,callStartTime, System.currentTimeMillis())
+                    callStartTime=0
                 } else {
-                    onOutgoingCallEnded(context, savedNumber, callStartTime, Date())
+                    onOutgoingCallEnded(context,callStartTime,System.currentTimeMillis())
+                    callStartTime=0
                 }
+
         }
         lastState = state
     }
@@ -92,9 +93,9 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
     companion object {
         //The receiver will be recreated whenever android feels like it.  We need a static variable to remember data between instantiations
         private var lastState = TelephonyManager.CALL_STATE_IDLE
-        private var callStartTime: Date = Date()
+        private var callStartTime: Long = 0
         private var isIncoming: Boolean = false
-        private var savedNumber: String? =
-            null  //because the passed incoming is only valid in ringing
+
+              //because the passed incoming is only valid in ringing
     }
 }

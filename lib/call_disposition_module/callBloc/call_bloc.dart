@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isfa_crm/accounts_module/models/call_data.dart';
 import 'package:isfa_crm/call_disposition_module/call_model.dart';
 import 'package:isfa_crm/call_disposition_module/call_repository.dart';
 
@@ -11,8 +12,9 @@ class CallBloc extends Bloc<CallEvent, CallState> {
   List<String>? callStatus;
   List<ContactStatusList>? contactStatus;
   List<String>? callSubStatus;
+  final CallData callData;
 
-  CallBloc(this.repo) : super(CallInitial()) {
+  CallBloc(this.repo, this.callData) : super(CallInitial()) {
     on<ShowCallStatusListEvent>((event, emit) async {
       try {
         final callStatusRespone =

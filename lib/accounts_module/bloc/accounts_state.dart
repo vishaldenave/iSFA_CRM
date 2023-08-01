@@ -21,6 +21,6 @@ class AccountErrorMesssage extends AccountsState {
 }
 
 class MoveToSaveFeedback extends AccountsState {
-  final String path;
-  MoveToSaveFeedback(this.path);
+  final CallData callData;
+  MoveToSaveFeedback(this.callData);
 }

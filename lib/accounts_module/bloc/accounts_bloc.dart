@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isfa_crm/accounts_module/accounts_repository.dart';
 import 'package:isfa_crm/accounts_module/models/accounts_name_model.dart';
+import 'package:isfa_crm/accounts_module/models/call_data.dart';
 import 'package:isfa_crm/accounts_module/models/contact_list_model.dart';
 import 'package:isfa_crm/utility/method_chanel.dart';
 
@@ -13,10 +14,10 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   AccountsRepository repo;
   List<OrgList> orgList = [];
   List<OrgList> filteredList = [];
-  String showSelectedName = "";
   List<ContactList> contactList = [];
   bool isAccountNameSelecting = false;
   bool showContants = false;
+  OrgList? selectedOrg;
 
   AccountsBloc(this.repo) : super(AccountsInitial()) {
     on<ChangeAccountSelectEvent>((event, emit) =>
@@ -36,7 +37,7 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
     });
 
     on<ShowSelectedAccountEvent>((event, emit) {
-      showSelectedName = event.orgList.orgName;
+      selectedOrg = event.orgList;
       add(ShowContactListEvent(event.orgList.orgId));
     });
 
@@ -78,13 +79,15 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
               .setMethodCallHandler((call) async {
             switch (call.method) {
               case "audioFile":
-                String file = call.arguments as String;
-                emit(MoveToSaveFeedback(file));
+                String path = call.arguments['path'];
+                String duration = call.arguments['duration'];
+                emit(MoveToSaveFeedback(
+                    CallData(path, duration, event.contactList)));
                 break;
             }
           });
           await MyMethodChanel.start("Madan_Gopal", "6284184523"
-              // event.contactList.contactName ?? "",
+              //event.contactList.contactName ?? "",
               // event.contactList.mobile ?? ""
               );
         } else {

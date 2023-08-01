@@ -61,13 +61,13 @@ class ContactStatusModel {
   }
 
   Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['status'] = status;
-    _data['message'] = message;
-    _data['statusCode'] = statusCode;
-    _data['contactStatusList'] =
+    final data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    data['statusCode'] = statusCode;
+    data['contactStatusList'] =
         contactStatusList.map((e) => e.toJson()).toList();
-    return _data;
+    return data;
   }
 }
 

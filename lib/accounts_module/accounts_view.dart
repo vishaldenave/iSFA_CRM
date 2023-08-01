@@ -55,9 +55,10 @@ class _AccountsViewState extends State<AccountsView> {
                             style: TextStyle(
                                 fontSize: 16.sp, fontWeight: FontWeight.w400),
                           ),
-                          subtitle: Text(bloc.showSelectedName.isEmpty
+                          subtitle: Text(bloc.selectedOrg == null
                               ? "Select"
-                              : bloc.showSelectedName),
+                              : bloc.selectedOrg?.orgName ??
+                                  "Name not available"),
                           trailing: Icon(bloc.isAccountNameSelecting
                               ? Icons.keyboard_arrow_up
                               : Icons.keyboard_arrow_down),
