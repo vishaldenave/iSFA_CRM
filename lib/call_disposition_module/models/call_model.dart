@@ -206,7 +206,7 @@ class CallFeedbackBodyModel {
 
   CallFeedbackBodyModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    message = json['message'];
+    message = json['message'] ?? "";
     statusCode = json['statusCode'];
   }
 

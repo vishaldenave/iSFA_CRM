@@ -32,7 +32,7 @@ class _AccountsViewState extends State<AccountsView> {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(state.message)));
               } else if (state is MoveToSaveFeedback) {
-                context.go(AppPaths.callDisposition);
+                context.go(AppPaths.callDisposition, extra: state.callData);
               }
             },
             builder: (context, state) {

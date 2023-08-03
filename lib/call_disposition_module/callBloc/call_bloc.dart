@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isfa_crm/accounts_module/models/call_data.dart';
 import 'package:isfa_crm/call_disposition_module/models/call_model.dart';
 import 'package:isfa_crm/call_disposition_module/repositories/call_repository.dart';
+import 'package:isfa_crm/utility/method_chanel.dart';
 
 part 'call_event.dart';
 part 'call_state.dart';
@@ -19,6 +23,7 @@ class CallBloc extends Bloc<CallEvent, CallState> {
   TextEditingController remarksController = TextEditingController();
 
   CallBloc(this.repo, this.callData) : super(CallInitial()) {
+    MyMethodChanel.end();
     on<ShowCallStatusListEvent>((event, emit) async {
       try {
         final callStatusRespone =
@@ -91,13 +96,13 @@ class CallBloc extends Bloc<CallEvent, CallState> {
 
     on<OnSubmitFeedbackEvent>((event, emit) async {
       if (selectedCallStatus == null) {
-        //please choose call status
+        emit(ErrorState("Please choose call status"));
       } else if (selectedContactStatus == null) {
-        //please choose contact status
+        emit(ErrorState("Please choose contact status"));
       } else if (selectedCallSubStatus == null) {
-        //please choose call sub status
+        emit(ErrorState("Please choose call sub status"));
       } else if (remarksController.text.isEmpty) {
-        //please enter remarks
+        emit(ErrorState("Please enter remarks"));
       } else {
         CallFeedbackModel callFeedbackModel = CallFeedbackModel(
             userId: "",
@@ -112,7 +117,30 @@ class CallBloc extends Bloc<CallEvent, CallState> {
             callDuration: callData.duration,
             callerId: "hi");
 
-        repo.saveFeedback(callFeedbackModel, callData.path);
+        // FilePickerResult? result = await FilePicker.platform.pickFiles(
+        //   allowMultiple: false,
+        //   type: FileType.custom,
+        //   initialDirectory: callData.path.path,
+        //   allowedExtensions: ['amr'],
+        // );
+
+        // if (result != null) {
+        //   var callFeedbackBodyModel = await repo.saveFeedback(
+        //       callFeedbackModel, File(result.files.first.path!), emit);
+        //   if (callFeedbackBodyModel.statusCode == 200) {
+        //     emit(SucessFullSubmitState());
+        //   } else {
+        //     emit(ErrorState(callFeedbackBodyModel.message));
+        //   }
+        // }
+
+        var callFeedbackBodyModel =
+            await repo.saveFeedback(callFeedbackModel, callData.path, emit);
+        if (callFeedbackBodyModel.statusCode == 200) {
+          emit(SucessFullSubmitState());
+        } else {
+          emit(ErrorState(callFeedbackBodyModel.message));
+        }
       }
     });
   }

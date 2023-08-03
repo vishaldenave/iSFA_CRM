@@ -6,19 +6,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.net.Uri
-import android.os.Bundle
 import android.os.Environment
-import android.os.PersistableBundle
 import android.provider.Settings
 import android.text.TextUtils
 import androidx.core.app.ActivityCompat
-import com.example.isfa_crm.receiver.CallRecordReceiver
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 
 class MainActivity: FlutterActivity() {
@@ -68,17 +62,17 @@ class MainActivity: FlutterActivity() {
         }
         return false
     }
-
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         callRecord = CallRecord.Builder(this)
-            .setRecordFileName("Record_" + SimpleDateFormat("ddMMyyyyHHmmss", Locale.US).format(
-                Date()
-            ))
+//            .setRecordFileName("Record_" + SimpleDateFormat("ddMMyyyyHHmmss", Locale.US).format(
+//                Date()
+//            ))
             .setRecordDirName("Den_CRM")
+            //.setRecordDirPath(Environment.getExternalStoragePublicDirectory("Den_CRM").path)
             .setRecordDirPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path)
             .setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-            .setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            .setOutputFormat(MediaRecorder.OutputFormat.AMR_NB)
             .setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION)
             .setLogEnable(true)
             .setShowSeed(false)
@@ -92,16 +86,14 @@ class MainActivity: FlutterActivity() {
             when (call.method) {
                 "start"->{
                     callRecord.startCallReceiver()
-                   // callRecord.changeReceiver(CallRecordReceiver(callRecord));
                     val name = call.argument<String>("name")
                     val phone = call.argument<String>("phone")
-                    callRecord.changeRecordFileName("${name}_${phone}_"+SimpleDateFormat("ddMMyyyyHHmmss", Locale.US).format(
-                        Date()
-                    ))
+                   // val path = call.argument<String>("path")
+                    callRecord.changeRecordFileName("${name}_${phone}")
+                    //callRecord.changeRecordDirPath(path);
                     val intent = Intent(Intent.ACTION_DIAL)
                     intent.data = Uri.parse("tel:${phone}")
                     startActivity(intent)
-                   // result.success(1)
                 }
                 "end"->{
                     callRecord.stopCallReceiver()
@@ -125,10 +117,14 @@ class MainActivity: FlutterActivity() {
 
                 }
                 "hasPermissions" -> {
-                    //Log.d("Method Chanel--","Permission Channel")
                     val hasStoragePerm  =   context.packageManager.checkPermission(
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         context.packageName)
+
+                    val hasReadStoragePerm  =   context.packageManager.checkPermission(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        context.packageName)
+
                     val hasRecordPerm  =   context.packageManager.checkPermission(
                         Manifest.permission.RECORD_AUDIO,
                         context.packageName)
@@ -143,7 +139,8 @@ class MainActivity: FlutterActivity() {
                         hasStoragePerm == PackageManager.PERMISSION_GRANTED &&
                                 hasRecordPerm == PackageManager.PERMISSION_GRANTED &&
                                 hasRecordPermcap == PackageManager.PERMISSION_GRANTED &&
-                                hasphonecall == PackageManager.PERMISSION_GRANTED
+                                hasphonecall == PackageManager.PERMISSION_GRANTED &&
+                                hasReadStoragePerm == PackageManager.PERMISSION_GRANTED
                     result.success(hasPermissions)
                 }
             }

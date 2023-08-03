@@ -1,9 +1,12 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
+import 'dart:io';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
+import 'package:isfa_crm/call_disposition_module/callBloc/call_bloc.dart';
 import 'package:isfa_crm/call_disposition_module/models/call_model.dart';
 import 'package:isfa_crm/call_disposition_module/repositories/repository_helper.dart';
 import 'package:isfa_crm/utility/app_storage.dart';
+import 'package:isfa_crm/utility/extensions.dart';
 import '../../utility/app_constants.dart';
 
 class CallRepository {
@@ -79,9 +82,43 @@ class CallRepository {
   }
 
   Future<CallFeedbackBodyModel> saveFeedback(
-      CallFeedbackModel feedback, String path) async {
+      CallFeedbackModel feedback, File file, Emitter<CallState> emit) async {
     feedback.userId = userDetails?.userId ?? "-1";
     feedback.sessionId = userDetails?.sessionId ?? "";
-    return await CallRepostoryHelper().submit(feedback, path);
+
+    // final url = Uri.parse(
+    //     "${URLConstants.baseURLStart}/DenCRMCalling/api/saveCallDetails");
+    // final request = MultipartRequest('POST', url);
+
+    // final fileStream = ByteStream(file.openRead());
+    // final fileLength = await file.length();
+
+    // final multipartFile = MultipartFile(
+    //   'file',
+    //   fileStream,
+    //   fileLength,
+    //   filename: file.name,
+    // );
+
+    // request.files.add(multipartFile);
+    // request.fields.addAll({
+    //   'data': feedback.toRawJson().toString(),
+    // });
+
+    // final response = await request.send();
+    // String body = await response.stream.transform(utf8.decoder).join();
+
+    // if (response.statusCode == 200) {
+    //   return CallFeedbackBodyModel.fromRawJson(body);
+    // } else {
+    //   throw body.isEmpty
+    //       ? "Something went wrong"
+    //       : json.decode(body)['message'] ?? "Something went wrong";
+    // }
+
+    CallRepostoryHelper callRepostoryHelper = CallRepostoryHelper();
+    CallFeedbackBodyModel callFeedbackBodymodel =
+        await callRepostoryHelper.submit(feedback, file, emit);
+    return callFeedbackBodymodel;
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +8,7 @@ import 'package:isfa_crm/accounts_module/models/accounts_name_model.dart';
 import 'package:isfa_crm/accounts_module/models/call_data.dart';
 import 'package:isfa_crm/accounts_module/models/contact_list_model.dart';
 import 'package:isfa_crm/utility/method_chanel.dart';
+import 'package:path_provider/path_provider.dart';
 
 part 'accounts_event.dart';
 part 'accounts_state.dart';
@@ -81,12 +84,18 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
               case "audioFile":
                 String path = call.arguments['path'];
                 String duration = call.arguments['duration'];
-                emit(MoveToSaveFeedback(
-                    CallData(path, duration, event.contactList)));
+
+                debugPrint("File path  - $path");
+
+                emit(MoveToSaveFeedback(CallData(File.fromUri(Uri(path: path)),
+                    duration, event.contactList)));
                 break;
             }
           });
-          await MyMethodChanel.start("Madan_Gopal", "6284184523"
+          var path = await getExternalStorageDirectory();
+
+          await MyMethodChanel.start(
+              "vishal_sandhu", "6284193952", path?.path ?? ""
               //event.contactList.contactName ?? "",
               // event.contactList.mobile ?? ""
               );

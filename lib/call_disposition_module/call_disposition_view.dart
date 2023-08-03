@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:isfa_crm/accounts_module/models/call_data.dart';
 import 'package:isfa_crm/call_disposition_module/callBloc/call_bloc.dart';
 import 'package:isfa_crm/call_disposition_module/models/call_model.dart';
@@ -28,7 +29,14 @@ class _CallDispositionState extends State<CallDisposition> {
             ..add(ShowCallStatusListEvent())
             ..add(ShowContactStatusListEvent()),
           child: BlocConsumer<CallBloc, CallState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is ErrorState) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.message)));
+              } else if (state is SucessFullSubmitState) {
+                context.pop();
+              }
+            },
             builder: (context, state) {
               var bloc = context.read<CallBloc>();
               return Padding(
@@ -248,38 +256,43 @@ class _CallDispositionState extends State<CallDisposition> {
                           ),
                         ),
                         SizedBox(height: 18.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            MaterialButton(
-                              padding: const EdgeInsets.all(18),
-                              onPressed: () {},
-                              color: Colors.amber[600],
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: const Text("SAVE",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      fontSize: 15)),
-                            ),
-                            SizedBox(width: 15.w),
-                            MaterialButton(
-                              padding: const EdgeInsets.all(18),
-                              onPressed: () {
-                                bloc.add(OnSubmitFeedbackEvent());
-                              },
-                              color: Colors.greenAccent[400],
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: const Text("SUBMIT",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      fontSize: 15)),
-                            ),
-                          ],
+                        MaterialButton(
+                          padding: const EdgeInsets.all(18),
+                          onPressed: () {
+                            bloc.add(OnSubmitFeedbackEvent());
+                          },
+                          color: Colors.greenAccent[400],
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Text(
+                              state is ProgressState
+                                  ? "Loading...${state.progress}"
+                                  : "SUBMIT",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 15)),
                         ),
+
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     MaterialButton(
+                        //       padding: const EdgeInsets.all(18),
+                        //       onPressed: () {},
+                        //       color: Colors.amber[600],
+                        //       shape: RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(10)),
+                        //       child: const Text("SAVE",
+                        //           style: TextStyle(
+                        //               fontWeight: FontWeight.bold,
+                        //               color: Colors.white,
+                        //               fontSize: 15)),
+                        //     ),
+                        //     SizedBox(width: 15.w),
+
+                        //   ],
+                        // ),
                         SizedBox(height: 20.h)
                       ]),
                 ),

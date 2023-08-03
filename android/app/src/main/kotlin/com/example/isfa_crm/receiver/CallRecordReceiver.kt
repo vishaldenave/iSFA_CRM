@@ -4,6 +4,9 @@ import LogUtils
 import PrefsHelper
 import android.content.Context
 import android.media.MediaRecorder
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import com.example.isfa_crm.CallRecord
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
@@ -52,11 +55,17 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
     protected open fun onRecordingStarted(context: Context, callRecord: CallRecord, audioFile: File?) {}
 
     protected open fun onRecordingFinished(context: Context, callRecord: CallRecord, audioFile: File?,duration :Long) {
-        val arguments = HashMap<String, Any>()
-        arguments["path"] = audioFile?.path.toString()
-        arguments["duration"] = (duration/1000).toString()
-        MethodChannel(callRecord.flutterEngine.dartExecutor.binaryMessenger, "audio_received")
-        .invokeMethod("audioFile", arguments)
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (audioFile?.exists() == true){
+                val arguments = HashMap<String, Any>()
+                arguments["path"] = audioFile.absolutePath.toString()
+                arguments["duration"] = (duration/1000).toString()
+                MethodChannel(callRecord.flutterEngine.dartExecutor.binaryMessenger, "audio_received")
+                    .invokeMethod("audioFile", arguments)
+            }
+
+     //       callRecord.hitAPI(audioFile)
+        },1000)
     }
 
     private fun startRecord(context: Context, seed: String) {
@@ -125,8 +134,6 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
             val dirPath = PrefsHelper.readPrefString(context, CallRecord.PREF_DIR_PATH)
             val dirName = PrefsHelper.readPrefString(context, CallRecord.PREF_DIR_NAME)
             val showSeed = PrefsHelper.readPrefBool(context, CallRecord.PREF_SHOW_SEED)
-            val showPhoneNumber =
-                PrefsHelper.readPrefBool(context, CallRecord.PREF_SHOW_PHONE_NUMBER)
             val outputFormat = PrefsHelper.readPrefInt(context, CallRecord.PREF_OUTPUT_FORMAT)
             val audioSource = PrefsHelper.readPrefInt(context, CallRecord.PREF_AUDIO_SOURCE)
             val audioEncoder = PrefsHelper.readPrefInt(context, CallRecord.PREF_AUDIO_ENCODER)
@@ -146,11 +153,6 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
                 fileNameBuilder.append("_")
             }
 
-//            if (showPhoneNumber && phoneNumber != null) {
-//                fileNameBuilder.append(phoneNumber)
-//                fileNameBuilder.append("_")
-//            }
-
             fileName = fileNameBuilder.toString()
 
             val suffix: String
@@ -167,6 +169,9 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
                 MediaRecorder.OutputFormat.THREE_GPP -> {
                     suffix = ".3gp"
                 }
+                MediaRecorder.OutputFormat.MPEG_2_TS -> {
+                    suffix = ".mp3"
+                }
                 else -> {
                     suffix = ".amr"
                 }
@@ -174,12 +179,16 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
 
             audioFile = File.createTempFile(fileName, suffix, sampleDir)
 
-            recorder = MediaRecorder()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                recorder = MediaRecorder(context)
+            }else{
+                recorder = MediaRecorder()
+            }
             recorder?.apply {
                 setAudioSource(audioSource)
                 setOutputFormat(outputFormat)
                 setAudioEncoder(audioEncoder)
-                setOutputFile(audioFile!!.absolutePath)
+                setOutputFile(audioFile?.absolutePath)
                 setOnErrorListener { _, _, _ -> }
             }
 

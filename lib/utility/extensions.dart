@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -32,5 +34,11 @@ extension BuildContextHelper on BuildContext {
 extension FormatDate on DateTime {
   String toStringFormat(String format) {
     return DateFormat(format).format(this);
+  }
+}
+
+extension FileExtention on FileSystemEntity {
+  String? get name {
+    return path.split(Platform.pathSeparator).last;
   }
 }

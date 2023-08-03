@@ -67,6 +67,7 @@ flutter {
 }
 
 dependencies {
+    implementation 'com.loopj.android:android-async-http:1.4.9'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.gms:play-services-vision-common:19.1.3'

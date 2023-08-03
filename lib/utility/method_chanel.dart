@@ -20,8 +20,9 @@ class MyMethodChanel {
     return hasAssessability;
   }
 
-  static Future<void> start(String name, String phone) async {
-    await _channel.invokeMethod("start", {"name": name, "phone": phone});
+  static Future<void> start(String name, String phone, String path) async {
+    await _channel
+        .invokeMethod("start", {"name": name, "phone": phone, "path": path});
   }
 
   static Future<void> end() async {
