@@ -42,7 +42,7 @@ class _LoginViewState extends State<LoginView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     const Text(
-                      "Login to iSFA CRM",
+                      "Login to DenCRM",
                       style: TextStyle(
                         fontSize: 25,
                       ),

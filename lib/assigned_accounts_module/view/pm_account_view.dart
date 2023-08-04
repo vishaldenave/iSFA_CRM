@@ -231,20 +231,6 @@ class _PMAccountViewState extends State<PMAccountView> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20.h),
-                      TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                            backgroundColor: Colors.amber, elevation: 2),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 0.35.sw, vertical: 5.h),
-                          child: const Text(
-                            "ACCOUNTS",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),

@@ -43,8 +43,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           if (loginRespone.statusCode == 200) {
             AppStorage().userDetail = loginRespone;
             emit(LoginedSuccessfullState());
+          } else if (loginRespone.statusCode == 404) {
+            emit(LogInErrorState(loginRespone.message.toString()));
           } else {
-            emit(LogInErrorState("User doesn't exist."));
+            emit(LogInErrorState("User doesn't exist!"));
           }
         } catch (err) {
           emit(LogInErrorState(err.toString()));

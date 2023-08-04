@@ -94,10 +94,8 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
           });
           var path = "${(await getExternalStorageDirectory())?.path}";
 
-          await MyMethodChanel.start("vishal_sandhu", "6284193952", path
-              //event.contactList.contactName ?? "",
-              // event.contactList.mobile ?? ""
-              );
+          await MyMethodChanel.start(event.contactList.contactName ?? "",
+              event.contactList.mobile ?? "", path);
         } else {
           emit(AccountErrorMesssage(
               "Please open application settings & give available permissions to application."));

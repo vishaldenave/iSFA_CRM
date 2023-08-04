@@ -13,16 +13,16 @@ class LoginModel {
     required this.teamLeader,
     required this.programManager,
   });
-  late String status;
-  late String message;
-  late int statusCode;
-  late String userId;
-  late String sessionId;
-  late int campaignId;
-  late String role;
-  late String username;
-  late String teamLeader;
-  late String programManager;
+  late String? status;
+  late String? message;
+  late int? statusCode;
+  late String? userId;
+  late String? sessionId;
+  late int? campaignId;
+  late String? role;
+  late String? username;
+  late String? teamLeader;
+  late String? programManager;
 
   factory LoginModel.fromRawJson(String str) =>
       LoginModel.fromJson(json.decode(str));

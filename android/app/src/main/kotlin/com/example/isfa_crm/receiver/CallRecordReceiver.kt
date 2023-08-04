@@ -64,7 +64,7 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
                 MethodChannel(callRecord.flutterEngine.dartExecutor.binaryMessenger, "audio_received")
                     .invokeMethod("audioFile", arguments)
             }
-        },3000)
+        },1000)
     }
 
     private fun startRecord(context: Context, seed: String) {
