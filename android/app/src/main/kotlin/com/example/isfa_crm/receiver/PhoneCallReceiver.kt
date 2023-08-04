@@ -14,10 +14,7 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
            // savedNumber = intent.extras!!.getString(CallRecordReceiver.EXTRA_PHONE_NUMBER)
         } else {
             val stateStr = intent.extras!!.getString(TelephonyManager.EXTRA_STATE)
-           // val number = intent.extras!!.getString(TelephonyManager.EXTRA_INCOMING_NUMBER)
-           // startTime = number
             var state = 0
-
             when (stateStr) {
                 TelephonyManager.EXTRA_STATE_IDLE -> state = TelephonyManager.CALL_STATE_IDLE
                 TelephonyManager.EXTRA_STATE_OFFHOOK -> state = TelephonyManager.CALL_STATE_OFFHOOK

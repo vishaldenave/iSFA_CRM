@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -40,5 +40,9 @@ extension FormatDate on DateTime {
 extension FileExtention on FileSystemEntity {
   String? get name {
     return path.split(Platform.pathSeparator).last;
+  }
+
+  String get fileName {
+    return basename(path);
   }
 }

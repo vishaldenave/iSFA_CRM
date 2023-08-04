@@ -92,10 +92,9 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
                 break;
             }
           });
-          var path = await getExternalStorageDirectory();
+          var path = "${(await getExternalStorageDirectory())?.path}";
 
-          await MyMethodChanel.start(
-              "vishal_sandhu", "6284193952", path?.path ?? ""
+          await MyMethodChanel.start("vishal_sandhu", "6284193952", path
               //event.contactList.contactName ?? "",
               // event.contactList.mobile ?? ""
               );

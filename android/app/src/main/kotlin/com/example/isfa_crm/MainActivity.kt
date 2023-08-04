@@ -65,11 +65,7 @@ class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         callRecord = CallRecord.Builder(this)
-//            .setRecordFileName("Record_" + SimpleDateFormat("ddMMyyyyHHmmss", Locale.US).format(
-//                Date()
-//            ))
             .setRecordDirName("Den_CRM")
-            //.setRecordDirPath(Environment.getExternalStoragePublicDirectory("Den_CRM").path)
             .setRecordDirPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path)
             .setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
             .setOutputFormat(MediaRecorder.OutputFormat.AMR_NB)
@@ -88,9 +84,7 @@ class MainActivity: FlutterActivity() {
                     callRecord.startCallReceiver()
                     val name = call.argument<String>("name")
                     val phone = call.argument<String>("phone")
-                   // val path = call.argument<String>("path")
                     callRecord.changeRecordFileName("${name}_${phone}")
-                    //callRecord.changeRecordDirPath(path);
                     val intent = Intent(Intent.ACTION_DIAL)
                     intent.data = Uri.parse("tel:${phone}")
                     startActivity(intent)

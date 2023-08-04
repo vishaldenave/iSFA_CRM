@@ -6,21 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.MediaRecorder
-import android.net.Uri
 import android.os.Environment
-import android.renderscript.RenderScript.Priority
-import com.example.isfa_crm.helper.FileUtils
 import com.example.isfa_crm.receiver.CallRecordReceiver
 import com.example.isfa_crm.service.CallRecordService
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import com.loopj.android.http.JsonHttpResponseHandler
-import com.loopj.android.http.RequestParams
-import cz.msebera.android.httpclient.Header
 import io.flutter.embedding.engine.FlutterEngine
-import org.json.JSONObject
 import timber.log.Timber
-import java.io.File
 
 
 class CallRecord private constructor(private val mContext: Context) {
@@ -63,7 +53,6 @@ class CallRecord private constructor(private val mContext: Context) {
     fun startCallRecordService() {
         val intent = Intent()
         intent.setClass(mContext, CallRecordService::class.java)
-
         mContext.startService(intent)
         LogUtils.i(TAG, "startService()")
     }
@@ -124,26 +113,6 @@ class CallRecord private constructor(private val mContext: Context) {
     fun setEngine(flutterEngine: FlutterEngine) {
         this.flutterEngine = flutterEngine;
     }
-
-    fun hitAPI(audioFile: File?) {
-        val client = AsyncHttpClient()
-        val param =  RequestParams()
-        param.put("data","{\"userId\":\"vipin.gupta\",\"campaignId\":\"481\",\"orgId\":\"1784004\",\"sessionId\":\"4C4D98CC7C0041265475AB8A8399FFA8\",\"contactId\":\"3791096\",\"contactStatus\":\"Interested / No BANT\",\"callStatus\":\"Follow up for Contact\",\"contactSubStatus\":\"Interested / No BANT\",\"remarks\":\"ucucucucuu\",\"callDuration\":\"16\",\"callerId\":\"hi\"}")
-        param.put("file",File(FileUtils(mContext).getPath(Uri.fromFile(audioFile))))
-        client.post("https://devapps.denave.com:8448/DenCRMCalling/api/saveCallDetails",param,object :JsonHttpResponseHandler(){
-            override fun onSuccess(
-                statusCode: Int,
-                headers: Array<out Header>?,
-                response: JSONObject?
-            ) {
-                LogUtils.d("Response - "+response)
-                super.onSuccess(statusCode, headers, response)
-            }
-        })
-
-
-    }
-
     class Builder(private val mContext: Context) {
 
         val recordFileName: String
@@ -243,9 +212,7 @@ class CallRecord private constructor(private val mContext: Context) {
     }
 
     companion object {
-
         private val TAG = CallRecord::class.java.simpleName
-
         const val PREF_SAVE_FILE = "PrefSaveFile"
         const val PREF_FILE_NAME = "PrefFileName"
         const val PREF_DIR_NAME = "PrefDirName"
@@ -256,7 +223,6 @@ class CallRecord private constructor(private val mContext: Context) {
         const val PREF_AUDIO_ENCODER = "PrefAudioEncoder"
         const val PREF_OUTPUT_FORMAT = "PrefOutputFormat"
         const val PREF_LOG_ENABLE = "PrefLogEnable"
-
         fun initReceiver(context: Context): CallRecord {
             val callRecord = Builder(context).build()
             callRecord.startCallReceiver()

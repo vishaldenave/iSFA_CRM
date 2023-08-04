@@ -116,24 +116,7 @@ class CallBloc extends Bloc<CallEvent, CallState> {
             remarks: remarksController.text,
             callDuration: callData.duration,
             callerId: "hi");
-
-        // FilePickerResult? result = await FilePicker.platform.pickFiles(
-        //   allowMultiple: false,
-        //   type: FileType.custom,
-        //   initialDirectory: callData.path.path,
-        //   allowedExtensions: ['amr'],
-        // );
-
-        // if (result != null) {
-        //   var callFeedbackBodyModel = await repo.saveFeedback(
-        //       callFeedbackModel, File(result.files.first.path!), emit);
-        //   if (callFeedbackBodyModel.statusCode == 200) {
-        //     emit(SucessFullSubmitState());
-        //   } else {
-        //     emit(ErrorState(callFeedbackBodyModel.message));
-        //   }
-        // }
-
+        emit(ProgressState(""));
         var callFeedbackBodyModel =
             await repo.saveFeedback(callFeedbackModel, callData.path, emit);
         if (callFeedbackBodyModel.statusCode == 200) {

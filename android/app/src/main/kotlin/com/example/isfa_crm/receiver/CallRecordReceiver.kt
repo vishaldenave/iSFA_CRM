@@ -54,18 +54,17 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
     // Derived classes could override these to respond to specific events of interest
     protected open fun onRecordingStarted(context: Context, callRecord: CallRecord, audioFile: File?) {}
 
-    protected open fun onRecordingFinished(context: Context, callRecord: CallRecord, audioFile: File?,duration :Long) {
+    protected open fun onRecordingFinished(context: Context, callRecord: CallRecord, audioFile1: File?,duration :Long) {
+        callRecord.stateSaveFile
         Handler(Looper.getMainLooper()).postDelayed({
             if (audioFile?.exists() == true){
                 val arguments = HashMap<String, Any>()
-                arguments["path"] = audioFile.absolutePath.toString()
+                arguments["path"] = audioFile?.absolutePath.toString()
                 arguments["duration"] = (duration/1000).toString()
                 MethodChannel(callRecord.flutterEngine.dartExecutor.binaryMessenger, "audio_received")
                     .invokeMethod("audioFile", arguments)
             }
-
-     //       callRecord.hitAPI(audioFile)
-        },1000)
+        },3000)
     }
 
     private fun startRecord(context: Context, seed: String) {
@@ -77,7 +76,6 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
             if (!isSaveFile) {
                 return
             }
-
             if (isRecordStarted) {
                 try {
                     recorder?.stop()  // stop the recording
@@ -137,13 +135,10 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
             val outputFormat = PrefsHelper.readPrefInt(context, CallRecord.PREF_OUTPUT_FORMAT)
             val audioSource = PrefsHelper.readPrefInt(context, CallRecord.PREF_AUDIO_SOURCE)
             val audioEncoder = PrefsHelper.readPrefInt(context, CallRecord.PREF_AUDIO_ENCODER)
-
             val sampleDir = File("$dirPath/$dirName")
-
             if (!sampleDir.exists()) {
                 sampleDir.mkdirs()
             }
-
             val fileNameBuilder = StringBuilder()
             fileNameBuilder.append(fileName)
             fileNameBuilder.append("_")
@@ -152,16 +147,14 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
                 fileNameBuilder.append(seed)
                 fileNameBuilder.append("_")
             }
-
             fileName = fileNameBuilder.toString()
-
             val suffix: String
             when (outputFormat) {
                 MediaRecorder.OutputFormat.AMR_NB -> {
-                    suffix = ".amr"
+                    suffix = ".wav"//".amr"
                 }
                 MediaRecorder.OutputFormat.AMR_WB -> {
-                    suffix = ".amr"
+                    suffix = ".wav"//".amr"
                 }
                 MediaRecorder.OutputFormat.MPEG_4 -> {
                     suffix = ".mp4"
@@ -173,7 +166,7 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
                     suffix = ".mp3"
                 }
                 else -> {
-                    suffix = ".amr"
+                    suffix = ".wav"//".amr"
                 }
             }
 
