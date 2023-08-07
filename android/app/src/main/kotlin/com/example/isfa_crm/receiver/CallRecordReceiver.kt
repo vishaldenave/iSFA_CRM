@@ -7,6 +7,7 @@ import android.media.MediaRecorder
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.telephony.TelephonyManager
 import com.example.isfa_crm.CallRecord
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
@@ -17,17 +18,13 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
 
     companion object {
         private val TAG = CallRecordReceiver::class.java.simpleName
-
-        const val ACTION_IN = "android.intent.action.PHONE_STATE"
+        const val ACTION_IN = TelephonyManager.ACTION_PHONE_STATE_CHANGED
         const val ACTION_OUT = "android.intent.action.NEW_OUTGOING_CALL"
         const val EXTRA_PHONE_NUMBER = "android.intent.extra.PHONE_NUMBER"
         private var recorder: MediaRecorder? = null
     }
-
     private var audioFile: File? = null
     private var isRecordStarted = false
-
-
     override fun onIncomingCallReceived(context: Context, start: Long) {
 
     }
@@ -55,13 +52,14 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
     protected open fun onRecordingStarted(context: Context, callRecord: CallRecord, audioFile: File?) {}
 
     protected open fun onRecordingFinished(context: Context, callRecord: CallRecord, audioFile1: File?,duration :Long) {
-        callRecord.stateSaveFile
+      //  callRecord.stateSaveFile
         Handler(Looper.getMainLooper()).postDelayed({
             if (audioFile?.exists() == true){
                 val arguments = HashMap<String, Any>()
                 arguments["path"] = audioFile?.absolutePath.toString()
                 arguments["duration"] = (duration/1000).toString()
-                MethodChannel(callRecord.flutterEngine.dartExecutor.binaryMessenger, "audio_received")
+                MethodChannel(callRecord.flutterEngine.dartExecutor.binaryMessenger,
+                    "audio_received")
                     .invokeMethod("audioFile", arguments)
             }
         },1000)
@@ -85,7 +83,6 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
                     LogUtils.d(TAG, "RuntimeException: stop() is called immediately after start()")
                     audioFile?.delete()
                 }
-
                 releaseMediaRecorder()
                 isRecordStarted = false
             } else {
@@ -181,6 +178,8 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
                 setAudioSource(audioSource)
                 setOutputFormat(outputFormat)
                 setAudioEncoder(audioEncoder)
+//                 setAudioEncodingBitRate(16);
+//                setAudioSamplingRate(44100);
                 setOutputFile(audioFile?.absolutePath)
                 setOnErrorListener { _, _, _ -> }
             }

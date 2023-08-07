@@ -6,9 +6,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.provider.Settings
 import android.text.TextUtils
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -103,21 +105,44 @@ class MainActivity: FlutterActivity() {
                     }
                 }
                 "requestPermission"->{
-                    ActivityCompat.requestPermissions(this, arrayOf(
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_CALL_LOG),1)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+                        ActivityCompat.requestPermissions(
+                            this, arrayOf(
+                                Manifest.permission.READ_PHONE_STATE,
+                                Manifest.permission.CALL_PHONE,
+                                Manifest.permission.RECORD_AUDIO,
+                                Manifest.permission.READ_MEDIA_AUDIO,
+                                Manifest.permission.READ_CALL_LOG
+                            ), 1
+                        )
+
+                    }else {
+                        ActivityCompat.requestPermissions(
+                            this, arrayOf(
+                                Manifest.permission.CALL_PHONE,
+                                Manifest.permission.RECORD_AUDIO,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_CALL_LOG
+                            ), 1
+                        )
+                    }
 
                 }
                 "hasPermissions" -> {
-                    val hasStoragePerm  =   context.packageManager.checkPermission(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        context.packageName)
+                    val hasStoragePerm  =
 
-                    val hasReadStoragePerm  =   context.packageManager.checkPermission(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        context.packageName)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            context.packageManager.checkPermission(
+                                Manifest.permission.READ_MEDIA_AUDIO,
+                                context.packageName
+                            )
+                        }else {
+                            context.packageManager.checkPermission(
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                context.packageName
+                            )
+                        }
 
                     val hasRecordPerm  =   context.packageManager.checkPermission(
                         Manifest.permission.RECORD_AUDIO,
@@ -129,15 +154,14 @@ class MainActivity: FlutterActivity() {
                         Manifest.permission.CALL_PHONE,
                         context.packageName)
 
-                    val hasPermissions =
-                        hasStoragePerm == PackageManager.PERMISSION_GRANTED &&
-                                hasRecordPerm == PackageManager.PERMISSION_GRANTED &&
-                                hasRecordPermcap == PackageManager.PERMISSION_GRANTED &&
-                                hasphonecall == PackageManager.PERMISSION_GRANTED &&
-                                hasReadStoragePerm == PackageManager.PERMISSION_GRANTED
+                    val hasPermissions = hasStoragePerm == PackageManager.PERMISSION_GRANTED &&
+                            hasRecordPerm == PackageManager.PERMISSION_GRANTED &&
+                            hasRecordPermcap == PackageManager.PERMISSION_GRANTED &&
+                            hasphonecall == PackageManager.PERMISSION_GRANTED
                     result.success(hasPermissions)
                 }
             }
         }
     }
+
 }

@@ -2,11 +2,16 @@ package com.example.isfa_crm
 
 import LogUtils
 import PrefsHelper
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.MediaRecorder
+import android.os.Build
 import android.os.Environment
+import android.telephony.TelephonyManager
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.isfa_crm.receiver.CallRecordReceiver
 import com.example.isfa_crm.service.CallRecordService
 import io.flutter.embedding.engine.FlutterEngine
@@ -33,11 +38,24 @@ class CallRecord private constructor(private val mContext: Context) {
         val intentFilter = IntentFilter()
         intentFilter.addAction(CallRecordReceiver.ACTION_IN)
         intentFilter.addAction(CallRecordReceiver.ACTION_OUT)
-
+        val listenToBroadcastsFromOtherApps = false
+        val receiverFlags =
+        if (listenToBroadcastsFromOtherApps) {
+            ContextCompat.RECEIVER_EXPORTED
+        } else {
+            ContextCompat.RECEIVER_VISIBLE_TO_INSTANT_APPS
+        }
+//        ContextCompat.RECEIVER_VISIBLE_TO_INSTANT_APPS
         if (mCallRecordReceiver == null) {
             mCallRecordReceiver = CallRecordReceiver(this)
         }
-        mContext.registerReceiver(mCallRecordReceiver, intentFilter)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.registerReceiver(mContext,
+                mCallRecordReceiver,intentFilter,receiverFlags)
+        }else{
+            mContext.registerReceiver(mCallRecordReceiver, intentFilter)
+        }
     }
 
     fun stopCallReceiver() {

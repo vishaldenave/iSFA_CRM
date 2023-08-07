@@ -1,14 +1,16 @@
 package com.example.isfa_crm.receiver
 
+import LogUtils
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.telephony.TelephonyManager
 import java.util.Date
 
-abstract class PhoneCallReceiver : BroadcastReceiver() {
+abstract class PhoneCallReceiver : BroadcastReceiver()   {
 
     override fun onReceive(context: Context, intent: Intent) {
+        //LogUtils.d("Reciver-"+intent.action)
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
         if (intent.action == CallRecordReceiver.ACTION_OUT) {
            // savedNumber = intent.extras!!.getString(CallRecordReceiver.EXTRA_PHONE_NUMBER)
@@ -92,7 +94,5 @@ abstract class PhoneCallReceiver : BroadcastReceiver() {
         private var lastState = TelephonyManager.CALL_STATE_IDLE
         private var callStartTime: Long = 0
         private var isIncoming: Boolean = false
-
-              //because the passed incoming is only valid in ringing
     }
 }
