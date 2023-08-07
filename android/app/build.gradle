@@ -68,7 +68,7 @@ flutter {
 
 dependencies {
     // Kotlin
-    implementation("androidx.core:core-ktx:$core_version")
+  //  implementation("androidx.core:core-ktx:$core_version")
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.gms:play-services-vision-common:19.1.3'

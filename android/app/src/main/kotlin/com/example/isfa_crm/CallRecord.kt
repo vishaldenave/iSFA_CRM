@@ -40,22 +40,22 @@ class CallRecord private constructor(private val mContext: Context) {
         intentFilter.addAction(CallRecordReceiver.ACTION_OUT)
         val listenToBroadcastsFromOtherApps = false
         val receiverFlags =
-        if (listenToBroadcastsFromOtherApps) {
-            ContextCompat.RECEIVER_EXPORTED
-        } else {
-            ContextCompat.RECEIVER_VISIBLE_TO_INSTANT_APPS
-        }
+//        if (listenToBroadcastsFromOtherApps) {
+//            ContextCompat.RECEIVER_EXPORTED
+//        } else {
+//            ContextCompat.RECEIVER_VISIBLE_TO_INSTANT_APPS
+//        }
 //        ContextCompat.RECEIVER_VISIBLE_TO_INSTANT_APPS
-        if (mCallRecordReceiver == null) {
-            mCallRecordReceiver = CallRecordReceiver(this)
-        }
+//        if (mCallRecordReceiver == null) {
+//            mCallRecordReceiver = CallRecordReceiver(this)
+//        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ContextCompat.registerReceiver(mContext,
-                mCallRecordReceiver,intentFilter,receiverFlags)
-        }else{
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            ContextCompat.registerReceiver(mContext,
+//                mCallRecordReceiver,intentFilter,receiverFlags)
+//        }else{
             mContext.registerReceiver(mCallRecordReceiver, intentFilter)
-        }
+       // }
     }
 
     fun stopCallReceiver() {

@@ -105,44 +105,53 @@ class MainActivity: FlutterActivity() {
                     }
                 }
                 "requestPermission"->{
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    ActivityCompat.requestPermissions(
+                        this, arrayOf(
+                            Manifest.permission.CALL_PHONE,
+                            Manifest.permission.RECORD_AUDIO,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_CALL_LOG
+                        ), 1
+                    )
 
-                        ActivityCompat.requestPermissions(
-                            this, arrayOf(
-                                Manifest.permission.READ_PHONE_STATE,
-                                Manifest.permission.CALL_PHONE,
-                                Manifest.permission.RECORD_AUDIO,
-                                Manifest.permission.READ_MEDIA_AUDIO,
-                                Manifest.permission.READ_CALL_LOG
-                            ), 1
-                        )
-
-                    }else {
-                        ActivityCompat.requestPermissions(
-                            this, arrayOf(
-                                Manifest.permission.CALL_PHONE,
-                                Manifest.permission.RECORD_AUDIO,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_CALL_LOG
-                            ), 1
-                        )
-                    }
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//
+//                        ActivityCompat.requestPermissions(
+//                            this, arrayOf(
+//                                Manifest.permission.READ_PHONE_STATE,
+//                                Manifest.permission.CALL_PHONE,
+//                                Manifest.permission.RECORD_AUDIO,
+//                               // Manifest.permission.READ_MEDIA_AUDIO,
+//                                Manifest.permission.READ_CALL_LOG
+//                            ), 1
+//                        )
+//
+//                    }else {
+//                        ActivityCompat.requestPermissions(
+//                            this, arrayOf(
+//                                Manifest.permission.CALL_PHONE,
+//                                Manifest.permission.RECORD_AUDIO,
+//                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                                Manifest.permission.READ_CALL_LOG
+//                            ), 1
+//                        )
+//                    }
 
                 }
                 "hasPermissions" -> {
                     val hasStoragePerm  =
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            context.packageManager.checkPermission(
-                                Manifest.permission.READ_MEDIA_AUDIO,
-                                context.packageName
-                            )
-                        }else {
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                            context.packageManager.checkPermission(
+//                                Manifest.permission.READ_MEDIA_AUDIO,
+//                                context.packageName
+//                            )
+                     //   }else {
                             context.packageManager.checkPermission(
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                 context.packageName
                             )
-                        }
+                   //     }
 
                     val hasRecordPerm  =   context.packageManager.checkPermission(
                         Manifest.permission.RECORD_AUDIO,
