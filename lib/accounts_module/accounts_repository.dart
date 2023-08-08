@@ -55,4 +55,31 @@ class AccountsRepository {
           : json.decode(response.body)['message'] ?? "Something went wrong";
     }
   }
+
+  Future<AddContactModel> addContact(String orgId, String contactName,
+      String designation, String mobile, String email) async {
+    final body = {
+      "userId": userDetails?.userId,
+      "sessionId": userDetails?.sessionId,
+      "campaignId": AppStorage().currentCampaign?.campaignId ?? -1,
+      "orgId": orgId,
+      "contactName": contactName,
+      "designation": designation,
+      "mobile": mobile,
+      "email": email
+    };
+    final response = await post(
+        Uri.parse("${URLConstants.baseURLStart}/DenCRMCalling/api/addContact"),
+        body: jsonEncode(body),
+        headers: {'Content-Type': 'application/json'});
+    if (response.statusCode == 200) {
+      return AddContactModel.fromRawJson(response.body);
+    } else if (response.statusCode == 401) {
+      throw "Failed";
+    } else {
+      throw response.body.isEmpty
+          ? "Something went wrong"
+          : json.decode(response.body)['message'] ?? "Something went wrong";
+    }
+  }
 }

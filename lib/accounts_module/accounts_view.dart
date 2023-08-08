@@ -65,6 +65,26 @@ class _AccountsViewState extends State<AccountsView> {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    if (bloc.showContants)
+                      MaterialButton(
+                        onPressed: () {
+                          bloc.add(ShowAddContactEvent());
+                          // bloc.showAddContactDialog = true;
+                          showAddContactDialog(
+                              bloc.selectedOrg?.orgId ?? "-1", context, bloc);
+                          // BlocProvider.value(
+                          //     value: bloc,
+                          //     child: showAddContactDialog(
+                          //         bloc.selectedOrg?.orgId ?? "-1",
+                          //         context,
+                          //         bloc));
+                        },
+                        color: Colors.yellow,
+                        child: const Text("Add contacts"),
+                      ),
                     if (bloc.isAccountNameSelecting)
                       Card(
                         margin: EdgeInsets.fromLTRB(20.w, 0, 20.w, 20.w),
@@ -179,6 +199,142 @@ class _AccountsViewState extends State<AccountsView> {
           ),
         ),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   child: const Icon(Icons.add),
+      // ),
     );
+  }
+
+  void showAddContactDialog(
+      String orgId, BuildContext context, AccountsBloc bloc) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return BlocProvider(
+            create: (context) => bloc,
+            child: BlocConsumer<AccountsBloc, AccountsState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                return Dialog(
+                  elevation: 3,
+                  shape: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.w),
+                      borderSide: BorderSide.none),
+                  child: Padding(
+                    padding: EdgeInsets.all(13.w),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Add new contact",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: const Icon(Icons.cancel))
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          if (state is FailedAddContactState)
+                            Text(
+                              state.message,
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          if (state is SuccessAddContactState)
+                            Text(
+                              state.successMessage,
+                              style: const TextStyle(color: Colors.green),
+                            ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Row(
+                            children: [
+                              Text("Name"),
+                              Text(
+                                "*",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
+                          ),
+                          TextField(
+                            controller: bloc.nameController,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Row(
+                            children: [
+                              Text("Designation"),
+                              Text(
+                                "*",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
+                          ),
+                          TextField(
+                            controller: bloc.designationController,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Row(
+                            children: [
+                              Text("Mobile Number"),
+                              Text(
+                                "*",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
+                          ),
+                          TextField(
+                            controller: bloc.mobileController,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Row(
+                            children: [
+                              Text("Email ID"),
+                              Text(
+                                "*",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
+                          ),
+                          TextField(
+                            controller: bloc.emailController,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          MaterialButton(
+                            onPressed: () {
+                              bloc.add(AddContactEvent(orgId));
+                            },
+                            color: Colors.green[400],
+                            child: const Text(
+                              "SAVE",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        });
   }
 }

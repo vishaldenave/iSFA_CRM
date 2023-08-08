@@ -20,7 +20,12 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   List<ContactList> contactList = [];
   bool isAccountNameSelecting = false;
   bool showContants = false;
+  bool showAddContactDialog = false;
   OrgList? selectedOrg;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController designationController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
 
   AccountsBloc(this.repo) : super(AccountsInitial()) {
     on<ChangeAccountSelectEvent>((event, emit) =>
@@ -104,6 +109,36 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
         emit(AccountErrorMesssage(
             "Please Provide Accessibility to the Application"));
       }
+    });
+
+    on<AddContactEvent>((event, emit) async {
+      try {
+        final addContactResponse = await repo
+            .addContact(
+                event.orgId,
+                nameController.text,
+                designationController.text,
+                mobileController.text,
+                emailController.text)
+            .catchError((onError) {
+          throw onError.toString();
+        });
+        if (addContactResponse.statusCode == 200) {
+          nameController.text = "";
+          designationController.text = "";
+          mobileController.text = "";
+          emailController.text = "";
+          emit(SuccessAddContactState(addContactResponse.message));
+        } else {
+          emit(FailedAddContactState(addContactResponse.message));
+        }
+      } catch (err) {
+        throw err.toString();
+      }
+    });
+
+    on<ShowAddContactEvent>((event, emit) {
+      emit(ShowAddContactState());
     });
   }
 }

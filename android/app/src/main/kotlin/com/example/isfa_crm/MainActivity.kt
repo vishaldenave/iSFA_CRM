@@ -115,7 +115,7 @@ class MainActivity: FlutterActivity() {
 //                        ), 1
 //                    )
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
                         ActivityCompat.requestPermissions(
                             this, arrayOf(
@@ -142,7 +142,7 @@ class MainActivity: FlutterActivity() {
                 "hasPermissions" -> {
                     val hasStoragePerm  =
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             context.packageManager.checkPermission(
                                 Manifest.permission.READ_MEDIA_AUDIO,
                                 context.packageName
