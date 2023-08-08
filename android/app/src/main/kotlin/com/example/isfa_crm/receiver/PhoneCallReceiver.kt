@@ -15,7 +15,7 @@ abstract class PhoneCallReceiver : BroadcastReceiver()   {
         if (intent.action == CallRecordReceiver.ACTION_OUT) {
            // savedNumber = intent.extras!!.getString(CallRecordReceiver.EXTRA_PHONE_NUMBER)
         } else {
-            val stateStr = intent.extras!!.getString(TelephonyManager.EXTRA_STATE)
+            val stateStr = intent.extras?.getString(TelephonyManager.EXTRA_STATE)
             var state = 0
             when (stateStr) {
                 TelephonyManager.EXTRA_STATE_IDLE -> state = TelephonyManager.CALL_STATE_IDLE

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:isfa_crm/call_disposition_module/callBloc/call_bloc.dart';
 import 'package:isfa_crm/call_disposition_module/models/call_model.dart';
+import 'package:isfa_crm/call_disposition_module/repositories/repository_helper.dart';
 import 'package:isfa_crm/utility/app_storage.dart';
 import '../../utility/app_constants.dart';
 
@@ -84,29 +85,29 @@ class CallRepository {
       CallFeedbackModel feedback, File file, Emitter<CallState> emit) async {
     feedback.userId = userDetails?.userId ?? "-1";
     feedback.sessionId = userDetails?.sessionId ?? "";
-    final url = Uri.parse(
-        "${URLConstants.baseURLStart}/DenCRMCalling/api/saveCallDetails");
-    final request = MultipartRequest('POST', url);
-    request.files.add(await MultipartFile.fromPath('file', file.path,
-        contentType: MediaType.parse('audio/mpeg')));
-    request.fields.addAll({
-      'data': feedback.toRawJson().toString(),
-    });
+    // final url = Uri.parse(
+    //     "${URLConstants.baseURLStart}/DenCRMCalling/api/saveCallDetails");
+    // final request = MultipartRequest('POST', url);
+    // request.files.add(await MultipartFile.fromPath('file', file.path,
+    //     contentType: MediaType.parse('audio/mpeg')));
+    // request.fields.addAll({
+    //   'data': feedback.toRawJson().toString(),
+    // });
 
-    final response = await request.send();
-    String body = await response.stream.transform(utf8.decoder).join();
+    // final response = await request.send();
+    // String body = await response.stream.transform(utf8.decoder).join();
 
-    if (response.statusCode == 200) {
-      return CallFeedbackBodyModel.fromRawJson(body);
-    } else {
-      throw body.isEmpty
-          ? "Something went wrong"
-          : json.decode(body)['message'] ?? "Something went wrong";
-    }
+    // if (response.statusCode == 200) {
+    //   return CallFeedbackBodyModel.fromRawJson(body);
+    // } else {
+    //   throw body.isEmpty
+    //       ? "Something went wrong"
+    //       : json.decode(body)['message'] ?? "Something went wrong";
+    // }
 
-    // CallRepostoryHelper callRepostoryHelper = CallRepostoryHelper();
-    // CallFeedbackBodyModel callFeedbackBodymodel =
-    //     await callRepostoryHelper.submit(feedback, file, emit);
-    // return callFeedbackBodymodel;
+    CallRepostoryHelper callRepostoryHelper = CallRepostoryHelper();
+    CallFeedbackBodyModel callFeedbackBodymodel =
+        await callRepostoryHelper.submit(feedback, file, emit);
+    return callFeedbackBodymodel;
   }
 }

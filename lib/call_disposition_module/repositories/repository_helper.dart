@@ -8,6 +8,7 @@ import 'package:isfa_crm/call_disposition_module/callBloc/call_bloc.dart';
 import 'package:isfa_crm/call_disposition_module/models/call_model.dart';
 import 'package:isfa_crm/utility/app_constants.dart';
 import 'package:isfa_crm/utility/extensions.dart';
+import 'package:http_parser/http_parser.dart';
 
 class CallRepostoryHelper {
   Future<CallFeedbackBodyModel> submit(
@@ -17,10 +18,8 @@ class CallRepostoryHelper {
       "${URLConstants.baseURLStart}/DenCRMCalling/api/saveCallDetails",
       data: FormData.fromMap({
         "data": feedback.toRawJson().toString(),
-        "file": await MultipartFile.fromFile(
-          path.path,
-          filename: path.fileName,
-        )
+        "file": await MultipartFile.fromFile(path.path,
+            filename: path.fileName, contentType: MediaType.parse('audio/mpeg'))
       }),
       onSendProgress: (count, total) {
         if (total != -1) {

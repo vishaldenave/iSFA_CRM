@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.Environment
 import android.provider.Settings
 import android.text.TextUtils
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -18,13 +17,13 @@ import io.flutter.plugin.common.MethodChannel
 
 
 class MainActivity: FlutterActivity() {
-    val EVENTS = "audio_recorder"
+    private val EVENTS = "audio_recorder"
     private lateinit var callRecord:
             CallRecord
 
     private fun isAccessibilitySettingsOn(mContext: Context): Boolean {
         var accessibilityEnabled = 0
-        val service = packageName + "/" + ServiceAccessibility::class.java.getCanonicalName()
+        val service = packageName + "/" + ServiceAccessibility::class.java.canonicalName
         try {
             accessibilityEnabled = Settings.Secure.getInt(
                 mContext.applicationContext.contentResolver,
@@ -77,7 +76,7 @@ class MainActivity: FlutterActivity() {
             .setShowSeed(false)
             .setShowPhoneNumber(false)
             .build()
-        callRecord.setEngine(flutterEngine);
+        callRecord.setEngine(flutterEngine)
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             EVENTS
@@ -106,15 +105,6 @@ class MainActivity: FlutterActivity() {
                     }
                 }
                 "requestPermission"->{
-//                    ActivityCompat.requestPermissions(
-//                        this, arrayOf(
-//                            Manifest.permission.CALL_PHONE,
-//                            Manifest.permission.RECORD_AUDIO,
-//                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                            Manifest.permission.READ_CALL_LOG
-//                        ), 1
-//                    )
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
                         ActivityCompat.requestPermissions(
@@ -141,7 +131,6 @@ class MainActivity: FlutterActivity() {
                 }
                 "hasPermissions" -> {
                     val hasStoragePerm  =
-
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             context.packageManager.checkPermission(
                                 Manifest.permission.READ_MEDIA_AUDIO,
@@ -153,7 +142,6 @@ class MainActivity: FlutterActivity() {
                                 context.packageName
                             )
                         }
-
                     val hasRecordPerm  =   context.packageManager.checkPermission(
                         Manifest.permission.RECORD_AUDIO,
                         context.packageName)

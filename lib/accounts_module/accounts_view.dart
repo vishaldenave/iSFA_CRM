@@ -75,12 +75,6 @@ class _AccountsViewState extends State<AccountsView> {
                           // bloc.showAddContactDialog = true;
                           showAddContactDialog(
                               bloc.selectedOrg?.orgId ?? "-1", context, bloc);
-                          // BlocProvider.value(
-                          //     value: bloc,
-                          //     child: showAddContactDialog(
-                          //         bloc.selectedOrg?.orgId ?? "-1",
-                          //         context,
-                          //         bloc));
                         },
                         color: Colors.yellow,
                         child: const Text("Add contacts"),
@@ -199,10 +193,6 @@ class _AccountsViewState extends State<AccountsView> {
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 
@@ -211,8 +201,9 @@ class _AccountsViewState extends State<AccountsView> {
     showDialog(
         context: context,
         builder: (context) {
-          return BlocProvider(
-            create: (context) => bloc,
+          return BlocProvider.value(
+            value: bloc,
+            //create: (context) => bloc,
             child: BlocConsumer<AccountsBloc, AccountsState>(
               listener: (context, state) {},
               builder: (context, state) {
@@ -236,7 +227,7 @@ class _AccountsViewState extends State<AccountsView> {
                               ),
                               IconButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                    context.pop();
                                   },
                                   icon: const Icon(Icons.cancel))
                             ],
