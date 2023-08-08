@@ -21,6 +21,7 @@ class CallBloc extends Bloc<CallEvent, CallState> {
 
   CallBloc(this.repo, this.callData) : super(CallInitial()) {
     MyMethodChanel.end();
+    on<SucessSubmitEvent>((event, emit) => emit(SucessFullSubmitState()));
     on<ShowCallStatusListEvent>((event, emit) async {
       try {
         final callStatusRespone =
@@ -117,7 +118,7 @@ class CallBloc extends Bloc<CallEvent, CallState> {
         var callFeedbackBodyModel =
             await repo.saveFeedback(callFeedbackModel, callData.path, emit);
         if (callFeedbackBodyModel.statusCode == 200) {
-          emit(SucessFullSubmitState());
+          add(SucessSubmitEvent());
         } else {
           emit(ErrorState(callFeedbackBodyModel.message));
         }

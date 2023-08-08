@@ -73,7 +73,7 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/80f56ae94e98068045e2a098f2e73871/transformed/jetified-tracing-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/e344d2ed2e711d38e98c05cb623e2c41/transformed/jetified-kotlin-stdlib-common-1.7.10.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/ce76384ceff21195c63220ed79580dc1/transformed/jetified-annotation-experimental-1.1.0-api.jar</arg>
-                <arg>$USER_HOME$/Android/Sdk/platforms/android-31/android.jar</arg>
+                <arg>$USER_HOME$/Android/Sdk/platforms/android-33/android.jar</arg>
                 <arg>$USER_HOME$/Android/Sdk/build-tools/30.0.3/core-lambda-stubs.jar</arg>
               </args>
             </stringArg>
@@ -110,7 +110,7 @@
     <content url="file://$MODULE_DIR$/../../../../build/app/generated/res/resValues/androidTest/debug" />
     <content url="file://$MODULE_DIR$/../../../../build/app/generated/res/rs/androidTest/debug" />
     <content url="file://$MODULE_DIR$/../../../../build/app/generated/source/buildConfig/androidTest/debug" />
-    <orderEntry type="jdk" jdkName="Android API 31 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 33, extension level 3 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="android.flutter_plugin_android_lifecycle.main" scope="TEST" />
     <orderEntry type="module" module-name="android.file_picker.main" scope="TEST" />

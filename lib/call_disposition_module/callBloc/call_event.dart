@@ -28,3 +28,5 @@ class OnChangeCallSubStatusEvent extends CallEvent {
 }
 
 class OnSubmitFeedbackEvent extends CallEvent {}
+
+class SucessSubmitEvent extends CallEvent {}
