@@ -20,7 +20,6 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
   List<ContactList> contactList = [];
   bool isAccountNameSelecting = false;
   bool showContants = false;
-  bool showAddContactDialog = false;
   OrgList? selectedOrg;
   TextEditingController nameController = TextEditingController();
   TextEditingController designationController = TextEditingController();
