@@ -68,7 +68,6 @@ class MainActivity: FlutterActivity() {
         callRecord = CallRecord.Builder(this)
             .setRecordDirName("Den_CRM")
             .setRecordDirPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path)
-            //.setRecordDirPath(Environment.ge())
             .setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
             .setOutputFormat(MediaRecorder.OutputFormat.AMR_NB)
             .setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION)
@@ -120,6 +119,7 @@ class MainActivity: FlutterActivity() {
                     }else {
                         ActivityCompat.requestPermissions(
                             this, arrayOf(
+                                Manifest.permission.READ_PHONE_STATE,
                                 Manifest.permission.CALL_PHONE,
                                 Manifest.permission.RECORD_AUDIO,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE,

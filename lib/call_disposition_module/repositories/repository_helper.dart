@@ -8,6 +8,7 @@ import 'package:isfa_crm/call_disposition_module/callBloc/call_bloc.dart';
 import 'package:isfa_crm/call_disposition_module/models/call_model.dart';
 import 'package:isfa_crm/utility/app_constants.dart';
 import 'package:isfa_crm/utility/extensions.dart';
+// ignore: depend_on_referenced_packages
 import 'package:http_parser/http_parser.dart';
 
 class CallRepostoryHelper {

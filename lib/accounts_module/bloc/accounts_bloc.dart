@@ -7,8 +7,8 @@ import 'package:isfa_crm/accounts_module/accounts_repository.dart';
 import 'package:isfa_crm/accounts_module/models/accounts_name_model.dart';
 import 'package:isfa_crm/accounts_module/models/call_data.dart';
 import 'package:isfa_crm/accounts_module/models/contact_list_model.dart';
+import 'package:isfa_crm/utility/app_storage.dart';
 import 'package:isfa_crm/utility/method_chanel.dart';
-import 'package:path_provider/path_provider.dart';
 
 part 'accounts_event.dart';
 part 'accounts_state.dart';
@@ -96,10 +96,9 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
                 break;
             }
           });
-          var path = "${(await getExternalStorageDirectory())?.path}";
-
-          await MyMethodChanel.start(event.contactList.contactName ?? "",
-              event.contactList.mobile ?? "", path);
+          await MyMethodChanel.start(
+              "${AppStorage().currentCampaign?.campaignName ?? ""}_${AppStorage().userDetail?.username ?? ""}_${event.contactList.contactName ?? ""}",
+              event.contactList.mobile ?? "");
         } else {
           emit(AccountErrorMesssage(
               "Please open application settings & give available permissions to application."));
