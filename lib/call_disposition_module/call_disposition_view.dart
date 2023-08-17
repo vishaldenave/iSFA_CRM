@@ -39,17 +39,26 @@ class _CallDispositionState extends State<CallDisposition> {
             },
             builder: (context, state) {
               var bloc = context.read<CallBloc>();
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: SingleChildScrollView(
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         SizedBox(height: 20.h),
                         Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Theme.of(context).colorScheme.primary),
+                            border: Border.all(color: Colors.black38),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                              ),
+                            ],
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
                             child: Column(
@@ -64,17 +73,16 @@ class _CallDispositionState extends State<CallDisposition> {
                                     child: DropdownButton(
                                       hint: const Text(
                                         "Select..",
-                                        style: TextStyle(color: Colors.white70),
+                                        style: TextStyle(color: Colors.black45),
                                       ),
                                       isExpanded: true,
                                       value: bloc.selectedCallStatus,
-                                      iconEnabledColor: Colors.white,
-                                      iconDisabledColor: Colors.white,
+                                      iconEnabledColor: Colors.black,
+                                      iconDisabledColor: Colors.black,
                                       borderRadius: BorderRadius.circular(10),
                                       style: const TextStyle(
-                                          color: Colors.white, fontSize: 18),
-                                      dropdownColor:
-                                          Theme.of(context).colorScheme.primary,
+                                          color: Colors.black45, fontSize: 18),
+                                      dropdownColor: Colors.white,
                                       icon:
                                           const Icon(Icons.keyboard_arrow_down),
                                       items: bloc.callStatusList
@@ -99,8 +107,17 @@ class _CallDispositionState extends State<CallDisposition> {
                         SizedBox(height: 18.h),
                         Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Theme.of(context).colorScheme.primary),
+                            border: Border.all(color: Colors.black38),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                              ),
+                            ],
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
                             child: Column(
@@ -113,21 +130,18 @@ class _CallDispositionState extends State<CallDisposition> {
                                   SizedBox(
                                     width: double.infinity,
                                     child: DropdownButton(
-                                      // onTap: () {
-                                      //   callSubStatusValue = null;
-                                      // },
                                       hint: const Text(
                                         "Select..",
-                                        style: TextStyle(color: Colors.white70),
+                                        style: TextStyle(color: Colors.black45),
                                       ),
                                       isExpanded: true,
                                       value: bloc.selectedContactStatus,
-                                      iconEnabledColor: Colors.white,
-                                      iconDisabledColor: Colors.white,
+                                      iconEnabledColor: Colors.black,
+                                      iconDisabledColor: Colors.black,
                                       borderRadius: BorderRadius.circular(10),
                                       style: const TextStyle(
-                                          color: Colors.white, fontSize: 18),
-                                      dropdownColor: Colors.black,
+                                          color: Colors.black45, fontSize: 18),
+                                      dropdownColor: Colors.white,
                                       icon:
                                           const Icon(Icons.keyboard_arrow_down),
                                       items: bloc.contactStatusList
@@ -141,6 +155,7 @@ class _CallDispositionState extends State<CallDisposition> {
                                         );
                                       }).toList(),
                                       onChanged: (ContactStatusList? newValue) {
+                                        bloc.selectedCallSubStatus = null;
                                         bloc.add(OnChangeContactStatusEvent(
                                             newValue));
                                       },
@@ -153,9 +168,17 @@ class _CallDispositionState extends State<CallDisposition> {
                         bloc.callSubStatusList.isNotEmpty
                             ? Container(
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
+                                  border: Border.all(color: Colors.black38),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                    ),
+                                  ],
+                                ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(15.0),
                                   child: Column(
@@ -172,18 +195,18 @@ class _CallDispositionState extends State<CallDisposition> {
                                             hint: const Text(
                                               "Select..",
                                               style: TextStyle(
-                                                  color: Colors.white70),
+                                                  color: Colors.black45),
                                             ),
                                             isExpanded: true,
                                             value: bloc.selectedCallSubStatus,
-                                            iconEnabledColor: Colors.white,
-                                            iconDisabledColor: Colors.white,
+                                            iconEnabledColor: Colors.black,
+                                            iconDisabledColor: Colors.black,
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             style: const TextStyle(
-                                                color: Colors.white,
+                                                color: Colors.black45,
                                                 fontSize: 18),
-                                            dropdownColor: Colors.black,
+                                            dropdownColor: Colors.white,
                                             icon: const Icon(
                                                 Icons.keyboard_arrow_down),
                                             items: bloc.callSubStatusList
@@ -211,8 +234,17 @@ class _CallDispositionState extends State<CallDisposition> {
                         SizedBox(height: 18.h),
                         Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Theme.of(context).colorScheme.primary),
+                            border: Border.all(color: Colors.black38),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                              ),
+                            ],
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(15.0),
                             child: Column(
@@ -229,7 +261,7 @@ class _CallDispositionState extends State<CallDisposition> {
                                       // IconButton(
                                       //   icon: const Icon(Icons.mic,
                                       //       color: Colors.red),
-                                      //   onPressed: () {},
+                                      // onPressed: () {},
                                       // ),
                                     ],
                                   ),
@@ -237,19 +269,19 @@ class _CallDispositionState extends State<CallDisposition> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: TextField(
                                       controller: bloc.remarksController,
-                                      cursorColor: Colors.white,
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                      cursorColor: Colors.black45,
+                                      style: const TextStyle(
+                                          color: Colors.black45),
                                       decoration: const InputDecoration(
                                           enabledBorder: UnderlineInputBorder(
                                               borderSide: BorderSide(
-                                                  color: Colors.white)),
+                                                  color: Colors.black12)),
                                           disabledBorder: UnderlineInputBorder(
                                               borderSide: BorderSide(
-                                                  color: Colors.white)),
+                                                  color: Colors.black12)),
                                           hintText: "Remarks",
                                           hintStyle:
-                                              TextStyle(color: Colors.white70)),
+                                              TextStyle(color: Colors.black45)),
                                     ),
                                   )
                                 ]),
@@ -261,7 +293,7 @@ class _CallDispositionState extends State<CallDisposition> {
                           onPressed: () {
                             bloc.add(OnSubmitFeedbackEvent());
                           },
-                          color: Colors.greenAccent[400],
+                          color: Colors.amber,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           child: Text(
