@@ -114,6 +114,7 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
                 isRecordStarted = false
                 onRecordingFinished(context, callRecord, audioFile,duration)
                 LogUtils.i(TAG, "record stop")
+
             }
         } catch (e: Exception) {
             releaseMediaRecorder()

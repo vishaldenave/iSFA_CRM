@@ -7,6 +7,10 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/android.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/android.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1593379391/android.connectivity_plus.iml" filepath="$PROJECT_DIR$/.idea/modules/-1593379391/android.connectivity_plus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1593379391/android.connectivity_plus.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/-1593379391/android.connectivity_plus.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1593379391/android.connectivity_plus.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1593379391/android.connectivity_plus.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1593379391/android.connectivity_plus.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/-1593379391/android.connectivity_plus.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1925990208/android.file_picker.iml" filepath="$PROJECT_DIR$/.idea/modules/-1925990208/android.file_picker.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1925990208/android.file_picker.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/-1925990208/android.file_picker.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1925990208/android.file_picker.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1925990208/android.file_picker.main.iml" />

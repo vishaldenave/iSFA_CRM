@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:isfa_crm/accounts_module/accounts_view.dart';
@@ -6,64 +7,88 @@ import 'package:isfa_crm/assigned_accounts_module/view/assigned_accounts_view.da
 import 'package:isfa_crm/assigned_accounts_module/view/pm_account_view.dart';
 import 'package:isfa_crm/routes.dart';
 import 'package:isfa_crm/utility/app_storage.dart';
+import 'package:isfa_crm/utility/network_helper.dart';
 
 class TabbarView extends StatelessWidget {
   const TabbarView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    BuildContext? networkAlertContext;
     String name = AppStorage().userDetail?.username ?? "";
-    return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Row(
-              children: [
-                NameInitial(name: name),
-                SizedBox(width: 10.w),
-                Text(name),
-              ],
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  showLogoutAlert(
-                      context,
-                      () async => {
-                            await AppStorage().logout(),
-                            context.pushReplacement(AppPaths.initial)
-                          });
-                },
-                icon: const Icon(Icons.exit_to_app),
-              )
-            ],
-            elevation: 0,
-          ),
-          body: const Column(
-            children: [
-              Material(
-                color: Colors.white,
-                elevation: 2,
-                child: TabBar(
-                  indicatorColor: Colors.white12,
-                  tabs: [
-                    Tab(icon: Icon(Icons.home)),
-                    Tab(icon: Icon(Icons.groups_2)),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
+    return BlocProvider(
+      create: (context) => NetworkBloc()..add(NetworkObserve()),
+      child: BlocListener<NetworkBloc, NetworkState>(
+        listener: (c, state) {
+          if (state is NetworkFailure) {
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (c) {
+                  networkAlertContext = c;
+                  return const AlertDialog(
+                    content: Text("No Internet Connection"),
+                  );
+                });
+          } else {
+            if (networkAlertContext != null) {
+              Navigator.pop(networkAlertContext!);
+            }
+          }
+        },
+        child: DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                title: Row(
                   children: [
-                    AssignedAccountView(),
-                    AccountsView(),
+                    NameInitial(name: name),
+                    SizedBox(width: 10.w),
+                    Text(name),
                   ],
                 ),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      showLogoutAlert(
+                          context,
+                          () async => {
+                                await AppStorage().logout(),
+                                context.pushReplacement(AppPaths.initial)
+                              });
+                    },
+                    icon: const Icon(Icons.exit_to_app),
+                  )
+                ],
+                elevation: 0,
               ),
-            ],
-          ),
-        ));
+              body: const Column(
+                children: [
+                  Material(
+                    color: Colors.white,
+                    elevation: 2,
+                    child: TabBar(
+                      indicatorColor: Colors.white12,
+                      tabs: [
+                        Tab(icon: Icon(Icons.home)),
+                        Tab(icon: Icon(Icons.groups_2)),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        AssignedAccountView(),
+                        AccountsView(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )),
+      ),
+    );
   }
 
   void showLogoutAlert(BuildContext context, Function callback) {

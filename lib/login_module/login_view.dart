@@ -41,13 +41,23 @@ class _LoginViewState extends State<LoginView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Text(
-                      "Login to DenCRM",
-                      style: TextStyle(
-                        fontSize: 25,
-                      ),
-                    ),
+                    // const Text(
+                    //   "DenCRM",
+                    //   style: TextStyle(
+                    //       fontSize: 45,
+                    //       fontWeight: FontWeight.bold,
+                    //       color: Colors.black54),
+                    // ),
+                    Image.asset("assets/images/dencrm_logo.png"),
                     const SizedBox(height: 20),
+                    const Text(
+                      "Powered by Denave",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87),
+                    ),
+                    const SizedBox(height: 30),
                     if (state is LogInErrorState)
                       Text(
                         state.errorMessage,
@@ -72,9 +82,11 @@ class _LoginViewState extends State<LoginView> {
                                       bloc.passwordController.text));
                             },
                             decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.person),
                               border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
+                                      BorderRadius.all(Radius.circular(20))),
                               filled: true,
                               fillColor: Color.fromARGB(255, 230, 230, 230),
                               hintText: "Username",
@@ -97,9 +109,11 @@ class _LoginViewState extends State<LoginView> {
                             obscureText:
                                 context.read<LoginBloc>().isShowingPassword,
                             decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.lock),
                               border: const OutlineInputBorder(
+                                  borderSide: BorderSide.none,
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
+                                      BorderRadius.all(Radius.circular(20))),
                               filled: true,
                               fillColor:
                                   const Color.fromARGB(255, 230, 230, 230),
@@ -119,16 +133,35 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ),
                           const SizedBox(
-                            height: 20,
+                            height: 30,
                           ),
-                          Container(
-                            width: 190,
-                            decoration: BoxDecoration(
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary,
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(10))),
-                            child: MaterialButton(
+                          // Container(
+                          //   width: 190,
+                          //   decoration: BoxDecoration(
+                          //       color:
+                          //           Theme.of(context).colorScheme.onSecondary,
+                          //       borderRadius: const BorderRadius.all(
+                          //           Radius.circular(10))),
+                          //   child: MaterialButton(
+                          //     onPressed: () {
+                          //       if (state is! LogInLoadingState) {
+                          //         context.hideKeyboard();
+                          //         bloc.add(LoginSubmitEvent(
+                          //             bloc.usernameController.text,
+                          //             bloc.passwordController.text));
+                          //       }
+                          //     },
+                          //     child: Text(
+                          //       state is LogInLoadingState
+                          //           ? "Loading...."
+                          //           : "LOGIN",
+                          //       style: TextStyle(
+                          //           fontSize: 16.sp,
+                          //           fontWeight: FontWeight.w400),
+                          //     ),
+                          //   ),
+                          // ),
+                          ElevatedButton(
                               onPressed: () {
                                 if (state is! LogInLoadingState) {
                                   context.hideKeyboard();
@@ -137,16 +170,30 @@ class _LoginViewState extends State<LoginView> {
                                       bloc.passwordController.text));
                                 }
                               },
-                              child: Text(
-                                state is LogInLoadingState
-                                    ? "Loading...."
-                                    : "LOGIN",
-                                style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ),
-                          ),
+                              style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.all(0),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30))),
+                              child: Ink(
+                                  decoration: BoxDecoration(
+                                      gradient: const LinearGradient(colors: [
+                                        Colors.blue,
+                                        Color.fromARGB(255, 129, 215, 255)
+                                      ]),
+                                      borderRadius: BorderRadius.circular(30)),
+                                  child: Container(
+                                    width: double.maxFinite,
+                                    height: 35.h,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      state is LogInLoadingState
+                                          ? "Loading...."
+                                          : "LOGIN",
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ))),
                         ],
                       ),
                     ),

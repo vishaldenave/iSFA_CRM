@@ -25,7 +25,7 @@
                 "--dart-define",
                 "APP_NAME=CRM-Staging",
                 "--dart-define",
-                "BASE_URL=https://devapps.denave.com:8448"
+                "BASE_URL=https://staging.denave.com:8443"
             ]
         },
         {

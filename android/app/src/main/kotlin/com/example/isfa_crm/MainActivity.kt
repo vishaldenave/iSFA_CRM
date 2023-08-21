@@ -3,6 +3,7 @@ package com.example.isfa_crm
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.net.Uri

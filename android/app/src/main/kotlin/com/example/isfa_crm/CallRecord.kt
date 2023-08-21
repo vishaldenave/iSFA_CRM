@@ -58,6 +58,7 @@ class CallRecord private constructor(private val mContext: Context) {
         try {
             if (mCallRecordReceiver != null) {
                 mContext.unregisterReceiver(mCallRecordReceiver)
+
             }
         } catch (e: Exception) {
             LogUtils.e(e)

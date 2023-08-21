@@ -126,6 +126,7 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
           designationController.text = "";
           mobileController.text = "";
           emailController.text = "";
+          add(ShowContactListEvent(event.orgId));
           emit(SuccessAddContactState(addContactResponse.message));
         } else {
           emit(FailedAddContactState(addContactResponse.message));

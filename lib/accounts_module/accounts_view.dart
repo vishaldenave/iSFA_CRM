@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:isfa_crm/accounts_module/accounts_repository.dart';
 import 'package:isfa_crm/accounts_module/bloc/accounts_bloc.dart';
 import 'package:isfa_crm/routes.dart';
+import 'package:isfa_crm/utility/extensions.dart';
 
 class AccountsView extends StatefulWidget {
   const AccountsView({super.key});
@@ -33,6 +34,14 @@ class _AccountsViewState extends State<AccountsView> {
                     .showSnackBar(SnackBar(content: Text(state.message)));
               } else if (state is MoveToSaveFeedback) {
                 context.push(AppPaths.callDisposition, extra: state.callData);
+              }
+              if (state is SuccessAddContactState) {
+                context.hideKeyboard();
+                context.pop();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(state.successMessage),
+                  backgroundColor: Colors.green,
+                ));
               }
             },
             builder: (context, state) {
@@ -240,11 +249,14 @@ class _AccountsViewState extends State<AccountsView> {
                               state.message,
                               style: const TextStyle(color: Colors.red),
                             ),
-                          if (state is SuccessAddContactState)
-                            Text(
-                              state.successMessage,
-                              style: const TextStyle(color: Colors.green),
-                            ),
+                          // if (state is SuccessAddContactState)
+                          //   SnackBar(
+                          //     content: Text(
+                          //       state.successMessage,
+                          //       style: const TextStyle(color: Colors.white),
+                          //     ),
+                          //     backgroundColor: Colors.green,
+                          //   ),
                           const SizedBox(
                             height: 20,
                           ),
