@@ -1,0 +1,4 @@
+storePassword=denave
+keyPassword=denave
+keyAlias=key0
+storeFile=../../keystore/den_crm.jks
