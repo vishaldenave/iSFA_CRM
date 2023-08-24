@@ -49,7 +49,7 @@
                 "--dart-define",
                 "APP_NAME=CRM",
                 "--dart-define",
-                "BASE_URL=https://denave.com"
+                "BASE_URL=https://dencrm.denave.com:8441"
             ]
         }
     ]
