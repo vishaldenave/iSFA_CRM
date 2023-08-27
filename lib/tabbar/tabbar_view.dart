@@ -50,12 +50,12 @@ class TabbarView extends StatelessWidget {
                 actions: [
                   IconButton(
                     onPressed: () {
-                      showLogoutAlert(
-                          context,
-                          () async => {
-                                await AppStorage().logout(),
-                                context.pushReplacement(AppPaths.initial)
-                              });
+                      showLogoutAlert(context, () async {
+                        await AppStorage().logout();
+                        if (context.mounted) {
+                          context.pushReplacement(AppPaths.initial);
+                        }
+                      });
                     },
                     icon: const Icon(Icons.exit_to_app),
                   )
