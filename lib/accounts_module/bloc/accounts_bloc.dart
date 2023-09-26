@@ -79,33 +79,39 @@ class AccountsBloc extends Bloc<AccountsEvent, AccountsState> {
       emit(SearchState());
     });
     on<MakeCallEvent>((event, emit) async {
-      bool hasAssessability = await MyMethodChanel.hasAssessability();
-      if (hasAssessability) {
-        if (await MyMethodChanel.hasPermissions) {
-          const MethodChannel("audio_received")
-              .setMethodCallHandler((call) async {
-            switch (call.method) {
-              case "audioFile":
-                String path = call.arguments['path'];
-                String duration = call.arguments['duration'];
+      if ((event.contactList.contactName ?? "").isNotEmpty) {
+        bool hasAssessability = await MyMethodChanel.hasAssessability();
+        if (hasAssessability) {
+          if (await MyMethodChanel.hasPermissions) {
+            const MethodChannel("audio_received")
+                .setMethodCallHandler((call) async {
+              switch (call.method) {
+                case "audioFile":
+                  String path = call.arguments['path'];
+                  String duration = call.arguments['duration'];
 
-                debugPrint("File path  - $path");
+                  debugPrint("File path  - $path");
 
-                emit(MoveToSaveFeedback(CallData(File.fromUri(Uri(path: path)),
-                    duration, event.contactList)));
-                break;
-            }
-          });
-          await MyMethodChanel.start(
-              "${AppStorage().currentCampaign?.campaignName ?? ""}_${AppStorage().userDetail?.username ?? ""}_${event.contactList.contactName ?? ""}",
-              event.contactList.mobile ?? "");
+                  emit(MoveToSaveFeedback(CallData(
+                      File.fromUri(Uri(path: path)),
+                      duration,
+                      event.contactList)));
+                  break;
+              }
+            });
+            await MyMethodChanel.start(
+                "${AppStorage().currentCampaign?.campaignName ?? ""}_${AppStorage().userDetail?.username ?? ""}_${event.contactList.contactName ?? ""}",
+                event.contactList.mobile ?? "");
+          } else {
+            emit(AccountErrorMesssage(
+                "Please open application settings & give available permissions to application."));
+          }
         } else {
           emit(AccountErrorMesssage(
-              "Please open application settings & give available permissions to application."));
+              "Please Provide Accessibility to the Application"));
         }
       } else {
-        emit(AccountErrorMesssage(
-            "Please Provide Accessibility to the Application"));
+        emit(AccountErrorMesssage("Contact number not availabe."));
       }
     });
 

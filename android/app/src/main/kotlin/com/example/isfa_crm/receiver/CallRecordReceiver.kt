@@ -179,8 +179,8 @@ open class CallRecordReceiver(private var callRecord: CallRecord) : PhoneCallRec
                 setAudioSource(audioSource)
                 setOutputFormat(outputFormat)
                 setAudioEncoder(audioEncoder)
-//                 setAudioEncodingBitRate(16);
-//                setAudioSamplingRate(44100);
+                 setAudioEncodingBitRate(16);
+                setAudioSamplingRate(44100);
                 setOutputFile(audioFile?.absolutePath)
                 setOnErrorListener { _, _, _ -> }
             }

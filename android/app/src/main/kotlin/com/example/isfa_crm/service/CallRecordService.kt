@@ -21,8 +21,6 @@ open class CallRecordService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        LogUtils.i(TAG, "onStartCommand()")
-
         val fileName = PrefsHelper.readPrefString(this, CallRecord.PREF_FILE_NAME)
         val dirPath = PrefsHelper.readPrefString(this, CallRecord.PREF_DIR_PATH)
         val dirName = PrefsHelper.readPrefString(this, CallRecord.PREF_DIR_NAME)
@@ -36,7 +34,7 @@ open class CallRecordService : Service() {
             .setRecordDirPath(dirPath).setAudioEncoder(audioEncoder).setAudioSource(audioSource)
             .setOutputFormat(outputFormat).setShowSeed(showSeed).setShowPhoneNumber(showPhoneNumber)
             .build()
-        LogUtils.i(TAG, "mCallRecord.startCallReceiver()")
+
         mCallRecord.startCallReceiver()
         return START_REDELIVER_INTENT
     }
@@ -44,7 +42,7 @@ open class CallRecordService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         mCallRecord.stopCallReceiver()
-        LogUtils.i(TAG, "onDestroy()")
+
     }
 
     companion object {

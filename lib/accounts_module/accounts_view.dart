@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -300,7 +301,12 @@ class _AccountsViewState extends State<AccountsView> {
                             ],
                           ),
                           TextField(
+                            keyboardType: TextInputType.number,
                             controller: bloc.mobileController,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            maxLength: 10,
                           ),
                           const SizedBox(
                             height: 20,
@@ -316,6 +322,7 @@ class _AccountsViewState extends State<AccountsView> {
                           ),
                           TextField(
                             controller: bloc.emailController,
+                            keyboardType: TextInputType.emailAddress,
                           ),
                           const SizedBox(
                             height: 20,
